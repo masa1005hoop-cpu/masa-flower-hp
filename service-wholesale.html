@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>生花卸売 | まさflower</title>
+  <style>
+    /* ===== 共通変数 ===== */
+    :root {
+      --color-bg: #FAFAF8;
+      --color-surface: #FFFFFF;
+      --color-primary: #5C6B4A;
+      --color-primary-dark: #445039;
+      --color-accent: #A0845C;
+      --color-accent-light: #C4A882;
+      --color-text: #2D2D2D;
+      --color-muted: #7A7A72;
+      --color-border: #E8E6E0;
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic',sans-serif; background: var(--color-bg); color: var(--color-text); line-height: 1.7; }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    /* ===== ヘッダー ===== */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .logo { font-size: 22px; font-weight: 800; color: var(--color-primary); }
+    .logo span { color: var(--color-accent); }
+    nav { display: flex; align-items: center; gap: 32px; }
+    nav a { font-size: 14px; font-weight: 600; color: var(--color-muted); transition: color 0.2s; }
+    nav a:hover { color: var(--color-primary); }
+    .nav-cta { background: var(--color-primary); color: #fff !important; padding: 10px 20px; border-radius: 8px; font-weight: 700; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--color-text); border-radius: 2px; transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .mobile-nav { display: none; flex-direction: column; background: #fff; border-top: 1px solid var(--color-border); padding: 8px 0; }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a { padding: 14px 24px; font-size: 15px; font-weight: 600; color: var(--color-text); border-bottom: 1px solid var(--color-border); }
+    .mobile-nav a:last-child { border-bottom: none; }
+
+    /* ===== ヒーロー ===== */
+    .service-hero {
+      background: linear-gradient(145deg, #3d5c34 0%, #2a3f24 100%);
+      padding: 120px 0 100px;
+      position: relative; overflow: hidden;
+    }
+    .service-hero::before {
+      content: '🌸';
+      position: absolute; top: 40px; right: 80px;
+      font-size: 220px; opacity: 0.12; line-height: 1;
+      pointer-events: none;
+    }
+    .breadcrumb {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: rgba(255,255,255,0.55);
+      margin-bottom: 28px;
+    }
+    .breadcrumb a { color: rgba(255,255,255,0.55); transition: color 0.2s; }
+    .breadcrumb a:hover { color: #fff; }
+    .breadcrumb span { color: rgba(255,255,255,0.35); }
+    .service-hero h1 {
+      font-size: clamp(40px, 6vw, 68px);
+      font-weight: 900; letter-spacing: -0.03em; line-height: 1.1;
+      color: #fff; margin-bottom: 20px;
+    }
+    .service-hero p {
+      font-size: 17px; color: rgba(255,255,255,0.7);
+      max-width: 560px; line-height: 1.8; margin-bottom: 40px;
+    }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px; border-radius: 8px;
+      font-size: 15px; font-weight: 700; cursor: pointer;
+      transition: all 0.2s; border: none;
+    }
+    .btn-white { background: #fff; color: var(--color-primary); }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+    .btn-outline-white { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.4); }
+    .btn-outline-white:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+
+    /* ===== 特徴（KPI帯） ===== */
+    .kpi-bar { background: #fff; border-bottom: 1px solid var(--color-border); }
+    .kpi-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      divide-x: 1px solid var(--color-border);
+    }
+    .kpi-item {
+      padding: 36px 24px; text-align: center;
+      border-right: 1px solid var(--color-border);
+    }
+    .kpi-item:last-child { border-right: none; }
+    .kpi-number {
+      font-size: 36px; font-weight: 900;
+      color: var(--color-primary); letter-spacing: -0.03em;
+      margin-bottom: 4px;
+    }
+    .kpi-label { font-size: 13px; color: var(--color-muted); font-weight: 600; }
+
+    /* ===== セクション共通 ===== */
+    .section { padding: 96px 0; }
+    .section-label { font-size: 12px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 12px; }
+    .section-title { font-size: clamp(26px, 4vw, 38px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .section-desc { font-size: 15px; color: var(--color-muted); line-height: 1.8; max-width: 640px; }
+
+    /* ===== サービス詳細 ===== */
+    .detail-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: center;
+    }
+    .detail-grid.reverse { direction: rtl; }
+    .detail-grid.reverse > * { direction: ltr; }
+    .detail-img {
+      border-radius: 16px; overflow: hidden;
+      aspect-ratio: 4/3;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 120px;
+    }
+    .detail-img.green { background: linear-gradient(135deg, #e8f0e0, #c8dab8); }
+    .detail-img.earth { background: linear-gradient(135deg, #f0e8d8, #dac8a8); }
+    .detail-img.slate { background: linear-gradient(135deg, #e0e8f0, #c0d0e0); }
+    .check-list { list-style: none; display: flex; flex-direction: column; gap: 14px; margin-top: 28px; }
+    .check-list li {
+      display: flex; align-items: flex-start; gap: 12px;
+      font-size: 15px; line-height: 1.6;
+    }
+    .check-list li::before {
+      content: '✓';
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--color-primary); color: #fff;
+      font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+    }
+
+    /* ===== 対応フロー ===== */
+    .flow-bg { background: #F0EDE6; }
+    .flow-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+      position: relative;
+    }
+    .flow-grid::before {
+      content: '';
+      position: absolute; top: 36px; left: 12.5%; right: 12.5%;
+      height: 2px; background: var(--color-border); z-index: 0;
+    }
+    .flow-item { text-align: center; padding: 0 16px; position: relative; z-index: 1; }
+    .flow-num {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--color-primary); color: #fff;
+      font-size: 22px; font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 4px 16px rgba(92,107,74,0.3);
+    }
+    .flow-title { font-size: 15px; font-weight: 800; margin-bottom: 8px; }
+    .flow-desc { font-size: 13px; color: var(--color-muted); line-height: 1.7; }
+
+    /* ===== よくある質問 ===== */
+    .faq-list { display: flex; flex-direction: column; gap: 2px; }
+    .faq-item {
+      background: #fff; border: 1px solid var(--color-border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .faq-q {
+      padding: 20px 24px; font-size: 15px; font-weight: 700;
+      cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; user-select: none;
+      transition: background 0.2s;
+    }
+    .faq-q:hover { background: #fafaf8; }
+    .faq-q::after { content: '+'; font-size: 20px; font-weight: 400; color: var(--color-primary); flex-shrink: 0; }
+    .faq-item.open .faq-q::after { content: '−'; }
+    .faq-a {
+      display: none; padding: 0 24px 20px;
+      font-size: 14px; color: var(--color-muted); line-height: 1.8;
+      border-top: 1px solid var(--color-border);
+      padding-top: 16px;
+    }
+    .faq-item.open .faq-a { display: block; }
+
+    /* ===== CTA ===== */
+    .cta-section {
+      background: linear-gradient(135deg, #3d5c34, #2a3f24);
+      padding: 96px 0; text-align: center;
+    }
+    .cta-section h2 { font-size: clamp(28px, 4vw, 42px); font-weight: 900; color: #fff; margin-bottom: 16px; }
+    .cta-section p { font-size: 16px; color: rgba(255,255,255,0.7); margin-bottom: 40px; }
+    .cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    /* ===== フッター ===== */
+    footer { background: var(--color-text); color: rgba(255,255,255,0.7); padding: 40px 0 28px; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 32px; flex-wrap: wrap; }
+    .footer-logo { font-size: 20px; font-weight: 800; color: #fff; }
+    .footer-logo span { color: var(--color-accent-light); }
+    .footer-nav { display: flex; gap: 24px; flex-wrap: wrap; }
+    .footer-nav a { font-size: 13px; color: rgba(255,255,255,0.6); transition: color 0.2s; }
+    .footer-nav a:hover { color: #fff; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 12px; color: rgba(255,255,255,0.35); text-align: center; }
+
+    /* ===== レスポンシブ ===== */
+    @media (max-width: 768px) {
+      nav { display: none; }
+      .hamburger { display: flex; }
+      .detail-grid, .detail-grid.reverse { grid-template-columns: 1fr; gap: 40px; direction: ltr; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .flow-grid { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+      .flow-grid::before { display: none; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header>
+    <div class="container">
+      <div class="header-inner">
+        <a href="masa-flower.html" class="logo">まさ<span>flower</span></a>
+        <nav>
+          <a href="masa-flower.html#about">会社概要</a>
+          <a href="masa-flower.html#services">サービス</a>
+          <a href="masa-flower.html#results">実績</a>
+          <a href="masa-flower.html#contact" class="nav-cta">お問い合わせ</a>
+        </nav>
+        <button class="hamburger" id="hamburger" aria-label="メニューを開く">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-nav" id="mobileNav">
+      <a href="masa-flower.html">ホーム</a>
+      <a href="masa-flower.html#about">会社概要</a>
+      <a href="masa-flower.html#services">サービス</a>
+      <a href="masa-flower.html#results">実績</a>
+      <a href="masa-flower.html#contact">お問い合わせ</a>
+    </div>
+  </header>
+
+  <!-- ヒーロー -->
+  <section class="service-hero">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="masa-flower.html">ホーム</a>
+        <span>/</span>
+        <a href="masa-flower.html#services">サービス</a>
+        <span>/</span>
+        生花卸売
+      </div>
+      <h1>生花卸売</h1>
+      <p>花市場から直仕入れした新鮮な生花を、安定した品質・価格で法人様へお届けします。小ロットから大口まで柔軟に対応。</p>
+      <div class="hero-btns">
+        <a href="masa-flower.html#contact" class="btn btn-white">無料見積もりを依頼</a>
+        <a href="masa-flower.html#services" class="btn btn-outline-white">他のサービスを見る</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- KPI帯 -->
+  <div class="kpi-bar">
+    <div class="container">
+      <div class="kpi-grid">
+        <div class="kpi-item">
+          <div class="kpi-number">500<small style="font-size:0.5em">種+</small></div>
+          <div class="kpi-label">取扱品種数</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-number">300<small style="font-size:0.5em">社+</small></div>
+          <div class="kpi-label">取引法人数</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-number">翌日</div>
+          <div class="kpi-label">最短お届け</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-number">20<small style="font-size:0.5em">年+</small></div>
+          <div class="kpi-label">業界実績</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- サービス詳細 -->
+  <section class="section">
+    <div class="container">
+      <div class="detail-grid">
+        <div class="detail-img green">🌸</div>
+        <div>
+          <div class="section-label">Service Detail</div>
+          <h2 class="section-title">花市場直仕入れで<br>新鮮さと品質を保証</h2>
+          <p class="section-desc">毎朝花市場へ足を運び、鮮度・品質・価格のバランスが最良の生花を厳選して仕入れています。中間業者を挟まないため、コストを抑えながら高品質な花をお届けできます。</p>
+          <ul class="check-list">
+            <li>毎朝仕入れた当日便・翌日便に対応</li>
+            <li>国産・輸入花を問わず500種以上の豊富な品揃え</li>
+            <li>季節の旬の花を優先仕入れ、コストパフォーマンス抜群</li>
+            <li>品質不良の場合は無償交換・返金対応</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:#F7F5F0; padding-top:0;">
+    <div class="container" style="padding-top:96px;">
+      <div class="detail-grid reverse">
+        <div class="detail-img earth">🌷</div>
+        <div>
+          <div class="section-label">Flexible Order</div>
+          <h2 class="section-title">小ロットから大口まで<br>柔軟に対応</h2>
+          <p class="section-desc">花屋・ホテル・スーパー・葬儀社・ウェディング会社など、様々な業種・規模の法人様とお取引実績があります。初回のご注文でもご相談いただけます。</p>
+          <ul class="check-list">
+            <li>最小ロット10束〜（個人のお客様も応相談）</li>
+            <li>定期配送・スポット注文どちらにも対応</li>
+            <li>品種・数量のカスタムオーダー可能</li>
+            <li>法人向け掛け払い・請求書払い対応</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 対応フロー -->
+  <section class="section flow-bg">
+    <div class="container">
+      <div class="section-header" style="text-align:center; margin-bottom:64px;">
+        <div class="section-label">Flow</div>
+        <h2 class="section-title">ご注文の流れ</h2>
+      </div>
+      <div class="flow-grid">
+        <div class="flow-item">
+          <div class="flow-num">1</div>
+          <div class="flow-title">お問い合わせ</div>
+          <p class="flow-desc">フォームまたはお電話でご希望の品種・数量・日程をお知らせください。</p>
+        </div>
+        <div class="flow-item">
+          <div class="flow-num">2</div>
+          <div class="flow-title">お見積もり</div>
+          <p class="flow-desc">2営業日以内にお見積もりをご連絡。内容を確認後、ご注文確定。</p>
+        </div>
+        <div class="flow-item">
+          <div class="flow-num">3</div>
+          <div class="flow-title">仕入れ・梱包</div>
+          <p class="flow-desc">当日早朝に市場から仕入れ、鮮度を保ったまま丁寧に梱包します。</p>
+        </div>
+        <div class="flow-item">
+          <div class="flow-num">4</div>
+          <div class="flow-title">配送・お届け</div>
+          <p class="flow-desc">ご指定の日時・場所へ配送。定期便の場合は継続してお届けします。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- よくある質問 -->
+  <section class="section">
+    <div class="container">
+      <div style="max-width:720px; margin:0 auto;">
+        <div class="section-label" style="text-align:center;">FAQ</div>
+        <h2 class="section-title" style="text-align:center; margin-bottom:48px;">よくある質問</h2>
+        <div class="faq-list">
+          <div class="faq-item">
+            <div class="faq-q">最小注文数量はどのくらいですか？</div>
+            <div class="faq-a">法人様向け卸売の場合、最小ロット10束〜承っております。品種や状況によって異なる場合がありますので、まずはお気軽にご相談ください。</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">配送エリアはどこですか？</div>
+            <div class="faq-a">東京都・神奈川県・埼玉県・千葉県への配送に対応しております。それ以外のエリアについてもご相談いただける場合がございます。</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">急な追加注文には対応できますか？</div>
+            <div class="faq-a">在庫状況によっては当日・翌日対応も可能です。まずはお電話にてご連絡ください。できる限り柔軟に対応いたします。</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">品質に問題があった場合はどうなりますか？</div>
+            <div class="faq-a">お届けした花に品質上の問題があった場合、無償での交換または返金にて対応いたします。お届け後すみやかにご連絡ください。</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">支払い方法は何がありますか？</div>
+            <div class="faq-a">銀行振込、請求書払い（法人様）に対応しております。定期取引の場合は月締め請求書払いも承ります。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <h2>まずはお気軽にご相談ください</h2>
+      <p>見積もり無料。2営業日以内にご返信いたします。</p>
+      <div class="cta-btns">
+        <a href="masa-flower.html#contact" class="btn btn-white">無料見積もりを依頼 →</a>
+        <a href="masa-flower.html#services" class="btn btn-outline-white">他のサービスを見る</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- フッター -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">まさ<span>flower</span></div>
+        <nav class="footer-nav">
+          <a href="masa-flower.html#about">会社概要</a>
+          <a href="masa-flower.html#services">サービス</a>
+          <a href="masa-flower.html#results">実績</a>
+          <a href="masa-flower.html#contact">お問い合わせ</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">&copy; 2024 まさflower. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    /* FAQ アコーディオン */
+    document.querySelectorAll('.faq-q').forEach(q => {
+      q.addEventListener('click', () => q.closest('.faq-item').classList.toggle('open'));
+    });
+    /* ハンバーガーメニュー */
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileNav.classList.toggle('open');
+    });
+    mobileNav.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        mobileNav.classList.remove('open');
+      });
+    });
+  </script>
+</body>
+</html>

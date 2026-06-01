@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>小売・店頭販売 | まさflower</title>
+  <style>
+    :root {
+      --color-bg: #FAFAF8;
+      --color-surface: #FFFFFF;
+      --color-primary: #5C6B4A;
+      --color-primary-dark: #445039;
+      --color-accent: #A0845C;
+      --color-accent-light: #C4A882;
+      --color-text: #2D2D2D;
+      --color-muted: #7A7A72;
+      --color-border: #E8E6E0;
+      --radius: 12px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic',sans-serif; background: var(--color-bg); color: var(--color-text); line-height: 1.7; }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .logo { font-size: 22px; font-weight: 800; color: var(--color-primary); }
+    .logo span { color: var(--color-accent); }
+    nav { display: flex; align-items: center; gap: 32px; }
+    nav a { font-size: 14px; font-weight: 600; color: var(--color-muted); transition: color 0.2s; }
+    nav a:hover { color: var(--color-primary); }
+    .nav-cta { background: var(--color-primary); color: #fff !important; padding: 10px 20px; border-radius: 8px; font-weight: 700; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--color-text); border-radius: 2px; transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .mobile-nav { display: none; flex-direction: column; background: #fff; border-top: 1px solid var(--color-border); padding: 8px 0; }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a { padding: 14px 24px; font-size: 15px; font-weight: 600; color: var(--color-text); border-bottom: 1px solid var(--color-border); }
+    .mobile-nav a:last-child { border-bottom: none; }
+
+    /* ヒーロー（テラコッタ系） */
+    .service-hero {
+      background: linear-gradient(145deg, #7a5c3a 0%, #513d26 100%);
+      padding: 120px 0 100px; position: relative; overflow: hidden;
+    }
+    .service-hero::before {
+      content: '🌷';
+      position: absolute; top: 40px; right: 80px;
+      font-size: 220px; opacity: 0.12; line-height: 1; pointer-events: none;
+    }
+    .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: rgba(255,255,255,0.55); margin-bottom: 28px; }
+    .breadcrumb a { color: rgba(255,255,255,0.55); transition: color 0.2s; }
+    .breadcrumb a:hover { color: #fff; }
+    .breadcrumb span { color: rgba(255,255,255,0.35); }
+    .service-hero h1 { font-size: clamp(40px, 6vw, 68px); font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; color: #fff; margin-bottom: 20px; }
+    .service-hero p { font-size: 17px; color: rgba(255,255,255,0.7); max-width: 560px; line-height: 1.8; margin-bottom: 40px; }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: none; }
+    .btn-white { background: #fff; color: var(--color-accent); }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+    .btn-outline-white { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.4); }
+    .btn-outline-white:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+
+    .kpi-bar { background: #fff; border-bottom: 1px solid var(--color-border); }
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+    .kpi-item { padding: 36px 24px; text-align: center; border-right: 1px solid var(--color-border); }
+    .kpi-item:last-child { border-right: none; }
+    .kpi-number { font-size: 36px; font-weight: 900; color: var(--color-accent); letter-spacing: -0.03em; margin-bottom: 4px; }
+    .kpi-label { font-size: 13px; color: var(--color-muted); font-weight: 600; }
+
+    .section { padding: 96px 0; }
+    .section-label { font-size: 12px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 12px; }
+    .section-title { font-size: clamp(26px, 4vw, 38px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .section-desc { font-size: 15px; color: var(--color-muted); line-height: 1.8; max-width: 640px; }
+
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .detail-grid.reverse { direction: rtl; }
+    .detail-grid.reverse > * { direction: ltr; }
+    .detail-img { border-radius: 16px; aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; font-size: 120px; }
+    .detail-img.earth { background: linear-gradient(135deg, #f0e8d8, #dac8a8); }
+    .detail-img.green { background: linear-gradient(135deg, #e8f0e0, #c8dab8); }
+    .check-list { list-style: none; display: flex; flex-direction: column; gap: 14px; margin-top: 28px; }
+    .check-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; line-height: 1.6; }
+    .check-list li::before {
+      content: '✓'; display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--color-accent); color: #fff;
+      font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+    }
+
+    /* 商品カテゴリカード */
+    .category-bg { background: #F0EDE6; }
+    .category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .category-card {
+      background: #fff; border: 1px solid var(--color-border);
+      border-radius: var(--radius); padding: 32px 24px; text-align: center;
+      transition: all 0.2s;
+    }
+    .category-card:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+    .category-icon { font-size: 48px; margin-bottom: 16px; }
+    .category-name { font-size: 16px; font-weight: 800; margin-bottom: 8px; }
+    .category-desc { font-size: 13px; color: var(--color-muted); line-height: 1.7; }
+
+    .faq-list { display: flex; flex-direction: column; gap: 2px; }
+    .faq-item { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius); overflow: hidden; }
+    .faq-q { padding: 20px 24px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 16px; user-select: none; transition: background 0.2s; }
+    .faq-q:hover { background: #fafaf8; }
+    .faq-q::after { content: '+'; font-size: 20px; font-weight: 400; color: var(--color-accent); flex-shrink: 0; }
+    .faq-item.open .faq-q::after { content: '−'; }
+    .faq-a { display: none; padding: 16px 24px 20px; font-size: 14px; color: var(--color-muted); line-height: 1.8; border-top: 1px solid var(--color-border); }
+    .faq-item.open .faq-a { display: block; }
+
+    .cta-section { background: linear-gradient(135deg, #7a5c3a, #513d26); padding: 96px 0; text-align: center; }
+    .cta-section h2 { font-size: clamp(28px, 4vw, 42px); font-weight: 900; color: #fff; margin-bottom: 16px; }
+    .cta-section p { font-size: 16px; color: rgba(255,255,255,0.7); margin-bottom: 40px; }
+    .cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    footer { background: var(--color-text); color: rgba(255,255,255,0.7); padding: 40px 0 28px; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 32px; flex-wrap: wrap; }
+    .footer-logo { font-size: 20px; font-weight: 800; color: #fff; }
+    .footer-logo span { color: var(--color-accent-light); }
+    .footer-nav { display: flex; gap: 24px; flex-wrap: wrap; }
+    .footer-nav a { font-size: 13px; color: rgba(255,255,255,0.6); transition: color 0.2s; }
+    .footer-nav a:hover { color: #fff; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 12px; color: rgba(255,255,255,0.35); text-align: center; }
+
+    @media (max-width: 768px) {
+      nav { display: none; }
+      .hamburger { display: flex; }
+      .detail-grid, .detail-grid.reverse { grid-template-columns: 1fr; gap: 40px; direction: ltr; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .category-grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <div class="header-inner">
+        <a href="masa-flower.html" class="logo">まさ<span>flower</span></a>
+        <nav>
+          <a href="masa-flower.html#about">会社概要</a>
+          <a href="masa-flower.html#services">サービス</a>
+          <a href="masa-flower.html#results">実績</a>
+          <a href="masa-flower.html#contact" class="nav-cta">お問い合わせ</a>
+        </nav>
+        <button class="hamburger" id="hamburger" aria-label="メニューを開く">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-nav" id="mobileNav">
+      <a href="masa-flower.html">ホーム</a>
+      <a href="masa-flower.html#about">会社概要</a>
+      <a href="masa-flower.html#services">サービス</a>
+      <a href="masa-flower.html#results">実績</a>
+      <a href="masa-flower.html#contact">お問い合わせ</a>
+    </div>
+  </header>
+
+  <section class="service-hero">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="masa-flower.html">ホーム</a>
+        <span>/</span>
+        <a href="masa-flower.html#services">サービス</a>
+        <span>/</span>
+        小売・店頭販売
+      </div>
+      <h1>小売・<br>店頭販売</h1>
+      <p>季節の生花・ブーケ・観葉植物を店頭でご用意。贈り物から毎日のインテリアまで、あなたのライフスタイルに寄り添う花をお届けします。</p>
+      <div class="hero-btns">
+        <a href="masa-flower.html#contact" class="btn btn-white">お問い合わせ</a>
+        <a href="masa-flower.html#services" class="btn btn-outline-white">他のサービスを見る</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="kpi-bar">
+    <div class="container">
+      <div class="kpi-grid">
+        <div class="kpi-item">
+          <div class="kpi-number">毎日</div>
+          <div class="kpi-label">新鮮な仕入れ</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-number">200<small style="font-size:0.5em">種+</small></div>
+          <div class="kpi-label">常時取扱品種</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-number">¥500<small style="font-size:0.5em">〜</small></div>
+          <div class="kpi-label">一束からOK</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-number">当日</div>
+          <div class="kpi-label">ラッピング対応</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="detail-grid">
+        <div class="detail-img earth">🌷</div>
+        <div>
+          <div class="section-label">Fresh Flowers</div>
+          <h2 class="section-title">毎朝仕入れた<br>新鮮な花をそのまま</h2>
+          <p class="section-desc">産地や市場から直接仕入れた生花を、その日のうちに店頭へ並べます。鮮度にこだわるから、長持ちする花をお届けできます。</p>
+          <ul class="check-list">
+            <li>毎朝仕入れの新鮮な花を当日販売</li>
+            <li>国産・輸入花を取り混ぜた豊富なラインナップ</li>
+            <li>スタッフが最適な花のケア方法をご案内</li>
+            <li>ギフト用ラッピング・メッセージカード無料</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 商品カテゴリ -->
+  <section class="section category-bg">
+    <div class="container">
+      <div style="text-align:center; margin-bottom:56px;">
+        <div class="section-label">Category</div>
+        <h2 class="section-title">取扱商品カテゴリ</h2>
+      </div>
+      <div class="category-grid">
+        <div class="category-card">
+          <div class="category-icon">💐</div>
+          <div class="category-name">季節の切り花</div>
+          <p class="category-desc">バラ・チューリップ・ひまわりなど、季節ごとの旬の花を豊富にご用意。一本からお求めいただけます。</p>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">🌿</div>
+          <div class="category-name">観葉植物</div>
+          <p class="category-desc">モンステラ・ポトス・サンスベリアなど、インテリアに馴染む観葉植物を各種取り揃えています。</p>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">🎀</div>
+          <div class="category-name">ブーケ・アレンジメント</div>
+          <p class="category-desc">プレゼントやお祝いに最適なブーケ・アレンジメント。ご予算・シーンに合わせてオーダーも可能です。</p>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">🕯️</div>
+          <div class="category-name">お供え・仏花</div>
+          <p class="category-desc">仏壇用・お墓参り用のお供え花を、用途に合った品種・価格でご用意しています。</p>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">🌱</div>
+          <div class="category-name">多肉植物・サボテン</div>
+          <p class="category-desc">手間いらずで人気の多肉植物・サボテン。プレゼントにも最適な小鉢サイズを多数取り揃えています。</p>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">🎁</div>
+          <div class="category-name">ギフト・贈答</div>
+          <p class="category-desc">誕生日・記念日・お祝いなど、シーンに合わせたギフト提案。ラッピング・のし対応も承ります。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="detail-grid reverse">
+        <div class="detail-img green">🌸</div>
+        <div>
+          <div class="section-label">Custom Order</div>
+          <h2 class="section-title">オーダーブーケ・<br>アレンジも承ります</h2>
+          <p class="section-desc">贈り物・記念日・発表会・卒業式など、特別な場面のために一から作るオーダーメイドにも対応しています。ご希望のイメージをお聞かせください。</p>
+          <ul class="check-list">
+            <li>予算・色・花の種類などのご要望を反映</li>
+            <li>3日前までのご予約で承ります</li>
+            <li>写真や参考画像をお持ちいただけると安心</li>
+            <li>法人様の大口注文・定期発注も対応</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:#F7F5F0;">
+    <div class="container">
+      <div style="max-width:720px; margin:0 auto;">
+        <div class="section-label" style="text-align:center;">FAQ</div>
+        <h2 class="section-title" style="text-align:center; margin-bottom:48px;">よくある質問</h2>
+        <div class="faq-list">
+          <div class="faq-item">
+            <div class="faq-q">営業時間と定休日を教えてください。</div>
+            <div class="faq-a">月〜土曜日 9:00〜18:00で営業しております。日曜日・祝日は定休日となります。</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">一本から購入できますか？</div>
+            <div class="faq-a">はい、切り花は一本からお求めいただけます。まとめてお買い上げの場合はお得なセット販売もご用意しています。</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">ラッピングはお願いできますか？</div>
+            <div class="faq-a">ギフト用ラッピングは無料で承っております。メッセージカードのご用意もできますので、お気軽にお申し付けください。</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">オーダーブーケの予約はどうすればいいですか？</div>
+            <div class="faq-a">お電話またはお問い合わせフォームにて、ご希望の日程・ご予算・イメージをお知らせください。3日前までのご連絡をお願いしております。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2>お気軽にご来店ください</h2>
+      <p>ご不明な点はお電話・お問い合わせフォームにてお気軽にどうぞ。</p>
+      <div class="cta-btns">
+        <a href="masa-flower.html#contact" class="btn btn-white">お問い合わせ →</a>
+        <a href="masa-flower.html#services" class="btn btn-outline-white">他のサービスを見る</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">まさ<span>flower</span></div>
+        <nav class="footer-nav">
+          <a href="masa-flower.html#about">会社概要</a>
+          <a href="masa-flower.html#services">サービス</a>
+          <a href="masa-flower.html#results">実績</a>
+          <a href="masa-flower.html#contact">お問い合わせ</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">&copy; 2024 まさflower. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.faq-q').forEach(q => {
+      q.addEventListener('click', () => q.closest('.faq-item').classList.toggle('open'));
+    });
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileNav.classList.toggle('open');
+    });
+    mobileNav.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        mobileNav.classList.remove('open');
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>まさflower | 生花卸・小売</title>
+  <style>
+    /* ===== CSS変数（カラーパレット） ===== */
+    :root {
+      --color-bg: #FAFAF8;
+      --color-surface: #FFFFFF;
+      --color-primary: #5C6B4A;
+      --color-primary-dark: #445039;
+      --color-accent: #A0845C;
+      --color-accent-light: #C4A882;
+      --color-text: #2D2D2D;
+      --color-muted: #7A7A72;
+      --color-border: #E8E6E0;
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.08);
+      --shadow-lg: 0 8px 40px rgba(0,0,0,0.12);
+    }
+
+    /* ===== リセット ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ===== ユーティリティ ===== */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .section {
+      padding: 96px 0;
+    }
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--color-text);
+      margin-bottom: 16px;
+    }
+    .section-desc {
+      font-size: 16px;
+      color: var(--color-muted);
+      max-width: 560px;
+    }
+    .section-header {
+      margin-bottom: 56px;
+    }
+    .section-header.center {
+      text-align: center;
+    }
+    .section-header.center .section-desc {
+      margin: 0 auto;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--color-primary);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: var(--color-primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(92,107,74,0.35);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--color-primary);
+      border: 2px solid var(--color-primary);
+    }
+    .btn-outline:hover {
+      background: var(--color-primary);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    /* ===== ヘッダー ===== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--color-primary);
+      letter-spacing: -0.02em;
+    }
+    .logo span {
+      color: var(--color-accent);
+    }
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+    nav a {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-muted);
+      transition: color 0.2s;
+    }
+    nav a:hover {
+      color: var(--color-primary);
+    }
+    .nav-cta {
+      background: var(--color-primary);
+      color: #fff !important;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      transition: background 0.2s, transform 0.2s !important;
+    }
+    .nav-cta:hover {
+      background: var(--color-primary-dark) !important;
+      transform: translateY(-1px);
+    }
+
+    /* ===== ハンバーガーメニュー（スマホ） ===== */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--color-text);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* モバイルナビ */
+    .mobile-nav {
+      display: none;
+      flex-direction: column;
+      gap: 0;
+      background: #fff;
+      border-top: 1px solid var(--color-border);
+      padding: 16px 0;
+    }
+    .mobile-nav.open {
+      display: flex;
+    }
+    .mobile-nav a {
+      padding: 14px 24px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-text);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .mobile-nav a:last-child { border-bottom: none; }
+
+    /* ===== ヒーローセクション ===== */
+    #hero {
+      padding: 180px 0 140px;
+      background: linear-gradient(135deg, #F5F5F0 0%, #EDE9E0 50%, #E8E2D4 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    /* 装飾的な花びら風の背景要素 */
+    #hero::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(160,132,92,0.12) 0%, transparent 70%);
+      top: -200px;
+      right: -100px;
+      pointer-events: none;
+    }
+    #hero::after {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(92,107,74,0.1) 0%, transparent 70%);
+      bottom: -100px;
+      left: -50px;
+      pointer-events: none;
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(92,107,74,0.1);
+      border: 1px solid rgba(92,107,74,0.2);
+      color: var(--color-primary);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 6px 16px;
+      border-radius: 999px;
+      margin-bottom: 28px;
+    }
+    .hero-title {
+      font-size: clamp(48px, 8vw, 88px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      color: var(--color-text);
+      margin-bottom: 24px;
+    }
+    .hero-title em {
+      font-style: normal;
+      color: var(--color-primary);
+    }
+    .hero-desc {
+      font-size: 17px;
+      color: var(--color-muted);
+      margin-bottom: 40px;
+      line-height: 1.8;
+    }
+    .hero-btns {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* ===== 実績数字セクション ===== */
+    #stats {
+      padding: 64px 0;
+      background: var(--color-primary);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,0.15);
+    }
+    .stat-item {
+      background: var(--color-primary);
+      padding: 48px 32px;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: clamp(36px, 5vw, 52px);
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-number span {
+      font-size: 0.55em;
+      font-weight: 700;
+      color: var(--color-accent-light);
+    }
+    .stat-label {
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    /* ===== サービス一覧セクション ===== */
+    #services {
+      background: #1a1a18;
+      padding: 96px 0;
+    }
+    #services .section-label { color: var(--color-accent-light); }
+    #services .section-title { color: #fff; }
+    #services .section-desc { color: rgba(255,255,255,0.5); }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+    }
+    /* 3枚目のカードを2列幅で表示 */
+    .service-card:nth-child(3) {
+      grid-column: 1 / -1;
+    }
+    .service-card {
+      position: relative;
+      min-height: 340px;
+      overflow: hidden;
+      cursor: pointer;
+      display: block;
+      text-decoration: none;
+    }
+    /* 各カードの背景グラデーション */
+    .service-card:nth-child(1) { background: linear-gradient(145deg, #3d5c34 0%, #2a3f24 100%); }
+    .service-card:nth-child(2) { background: linear-gradient(145deg, #7a5c3a 0%, #513d26 100%); }
+    .service-card:nth-child(3) { background: linear-gradient(145deg, #4a5568 0%, #2d3748 100%); }
+
+    /* 装飾的な大きな絵文字 */
+    .service-card::before {
+      content: attr(data-icon);
+      position: absolute;
+      top: 24px;
+      right: 32px;
+      font-size: 100px;
+      opacity: 0.18;
+      line-height: 1;
+      pointer-events: none;
+      transition: transform 0.4s ease, opacity 0.4s ease;
+    }
+    .service-card:hover::before {
+      transform: scale(1.15) rotate(-5deg);
+      opacity: 0.28;
+    }
+
+    .service-body {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 32px 36px;
+    }
+    .service-icon { display: none; }
+    .service-name {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+    .service-desc {
+      font-size: 14px;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.8;
+      margin-bottom: 20px;
+      max-width: 560px;
+    }
+    .service-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.8);
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .service-link::after { content: ' →'; }
+    .service-link:hover { color: #fff; border-color: #fff; }
+
+    /* ===== 会社概要セクション ===== */
+    #about {
+      background: #F0EDE6;
+    }
+    .about-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .about-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .about-table tr {
+      border-bottom: 1px solid var(--color-border);
+    }
+    .about-table th {
+      text-align: left;
+      padding: 16px 0;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-muted);
+      width: 120px;
+      vertical-align: top;
+    }
+    .about-table td {
+      padding: 16px 0;
+      font-size: 15px;
+      color: var(--color-text);
+    }
+
+    /* ===== 実績セクション ===== */
+    #results {
+      background: var(--color-bg);
+    }
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .result-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 32px;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      transition: all 0.2s;
+    }
+    .result-card:hover {
+      box-shadow: var(--shadow);
+      border-color: var(--color-accent-light);
+    }
+    .result-icon {
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+    .result-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .result-desc {
+      font-size: 14px;
+      color: var(--color-muted);
+      line-height: 1.7;
+    }
+    .result-tag {
+      display: inline-block;
+      background: rgba(92,107,74,0.1);
+      color: var(--color-primary);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+
+    /* ===== お問い合わせセクション ===== */
+    #contact {
+      background: #F0EDE6;
+    }
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .contact-info h3 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .contact-info p {
+      font-size: 14px;
+      color: var(--color-muted);
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+    .contact-detail {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .contact-detail-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .contact-detail-item .icon {
+      font-size: 18px;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+    .form-group label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+    .form-group label .required {
+      color: #c0392b;
+      margin-left: 4px;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      padding: 12px 16px;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: inherit;
+      background: #fff;
+      color: var(--color-text);
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(92,107,74,0.1);
+    }
+    .form-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+    .form-submit {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .form-success {
+      display: none;
+      background: rgba(92,107,74,0.1);
+      border: 1px solid var(--color-primary);
+      color: var(--color-primary);
+      padding: 16px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      grid-column: 1 / -1;
+    }
+
+    /* ===== フッター ===== */
+    footer {
+      background: var(--color-text);
+      color: rgba(255,255,255,0.7);
+      padding: 48px 0 32px;
+    }
+    .footer-inner {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    .footer-logo {
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .footer-logo span {
+      color: var(--color-accent-light);
+    }
+    .footer-tagline {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+    }
+    .footer-nav {
+      display: flex;
+      gap: 28px;
+    }
+    .footer-nav a {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.6);
+      transition: color 0.2s;
+    }
+    .footer-nav a:hover {
+      color: #fff;
+    }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 24px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.35);
+      text-align: center;
+    }
+
+    /* ===== チャットボット ===== */
+    .chat-widget {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 1000;
+    }
+    .chat-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      color: #fff;
+      font-size: 26px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(92,107,74,0.4);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chat-btn:hover {
+      background: var(--color-primary-dark);
+      transform: scale(1.05);
+    }
+    .chat-window {
+      display: none;
+      position: absolute;
+      bottom: 76px;
+      right: 0;
+      width: 320px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.18);
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+      animation: slideUp 0.25s ease-out;
+    }
+    .chat-window.open {
+      display: flex;
+      flex-direction: column;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .chat-header {
+      background: var(--color-primary);
+      padding: 16px 20px;
+      color: #fff;
+    }
+    .chat-header-title {
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 2px;
+    }
+    .chat-header-sub {
+      font-size: 11px;
+      opacity: 0.75;
+    }
+    .chat-messages {
+      flex: 1;
+      max-height: 300px;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .chat-msg {
+      max-width: 85%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .chat-msg.bot {
+      background: #F5F5F0;
+      color: var(--color-text);
+      border-bottom-left-radius: 4px;
+      align-self: flex-start;
+    }
+    .chat-msg.user {
+      background: var(--color-primary);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+      align-self: flex-end;
+    }
+    .chat-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      gap: 8px;
+    }
+    .chat-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .chat-input:focus {
+      border-color: var(--color-primary);
+    }
+    .chat-send {
+      background: var(--color-primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    .chat-send:hover {
+      background: var(--color-primary-dark);
+    }
+
+    /* ===== サービス詳細オーバーレイ ===== */
+    #service-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0,0,0,0.5);
+      overflow-y: auto;
+    }
+    #service-overlay.open { display: block; }
+    #service-overlay-inner {
+      background: var(--color-bg);
+      min-height: 100vh;
+      position: relative;
+    }
+    #service-close {
+      position: fixed;
+      top: 16px;
+      right: 20px;
+      z-index: 210;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    #service-close:hover { background: rgba(0,0,0,0.85); }
+
+    /* サービスページ内スタイル */
+    .sp-hero { padding: 120px 0 80px; position: relative; overflow: hidden; }
+    .sp-green  { background: linear-gradient(145deg, #3d5c34, #2a3f24); }
+    .sp-earth  { background: linear-gradient(145deg, #7a5c3a, #513d26); }
+    .sp-slate  { background: linear-gradient(145deg, #4a5568, #2d3748); }
+    .sp-hero-deco { position: absolute; top: 32px; right: 60px; font-size: 200px; opacity: 0.12; line-height: 1; pointer-events: none; }
+    .sp-breadcrumb { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 24px; }
+    .sp-title { font-size: clamp(36px, 6vw, 64px); font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; color: #fff; margin-bottom: 16px; }
+    .sp-lead  { font-size: 16px; color: rgba(255,255,255,0.7); max-width: 540px; line-height: 1.8; margin-bottom: 36px; }
+    .sp-btns  { display: flex; gap: 14px; flex-wrap: wrap; }
+    .sp-btn-white   { display: inline-flex; align-items: center; padding: 13px 26px; border-radius: 8px; font-size: 14px; font-weight: 700; background: #fff; color: #2d2d2d; cursor: pointer; transition: all 0.2s; }
+    .sp-btn-white:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+    .sp-btn-outline { display: inline-flex; align-items: center; padding: 13px 26px; border-radius: 8px; font-size: 14px; font-weight: 700; background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s; }
+    .sp-btn-outline:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+    .sp-kpi { background: #fff; border-bottom: 1px solid var(--color-border); }
+    .sp-kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+    .sp-kpi-item { padding: 32px 20px; text-align: center; border-right: 1px solid var(--color-border); }
+    .sp-kpi-item:last-child { border-right: none; }
+    .sp-kpi-num { font-size: 32px; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 4px; }
+    .sp-kpi-num small { font-size: 0.5em; font-weight: 700; }
+    .sp-kpi-label { font-size: 12px; color: var(--color-muted); font-weight: 600; }
+    .sp-body { padding: 80px 0; }
+    .sp-label { font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 10px; }
+    .sp-h2 { font-size: clamp(22px, 3.5vw, 34px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 14px; }
+    .sp-desc { font-size: 14px; color: var(--color-muted); line-height: 1.8; margin-bottom: 0; }
+    .sp-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .sp-reverse { direction: rtl; }
+    .sp-reverse > * { direction: ltr; }
+    .sp-img { border-radius: 14px; aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; font-size: 100px; }
+    .sp-img-green { background: linear-gradient(135deg, #e8f0e0, #c8dab8); }
+    .sp-img-earth { background: linear-gradient(135deg, #f0e8d8, #dac8a8); }
+    .sp-img-slate { background: linear-gradient(135deg, #e8edf5, #c8d4e8); }
+    .sp-checklist { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-top: 24px; }
+    .sp-checklist li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; line-height: 1.6; }
+    .sp-checklist li::before { content: '✓'; display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: var(--color-primary); color: #fff; font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .sp-check-earth li::before { background: var(--color-accent); }
+    .sp-check-slate li::before { background: #4a5568; }
+    .sp-flow-section, .sp-faq-section, .sp-category-section, .sp-scene-section { margin-top: 80px; }
+    .sp-section-center { text-align: center; margin-bottom: 48px; }
+    .sp-flow-grid { display: grid; grid-template-columns: repeat(4, 1fr); position: relative; }
+    .sp-flow-grid::before { content: ''; position: absolute; top: 35px; left: 12.5%; right: 12.5%; height: 2px; background: var(--color-border); z-index: 0; }
+    .sp-flow-item { text-align: center; padding: 0 14px; position: relative; z-index: 1; }
+    .sp-flow-num { width: 70px; height: 70px; border-radius: 50%; color: #fff; font-size: 20px; font-weight: 900; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
+    .sp-num-green { background: var(--color-primary); box-shadow: 0 4px 14px rgba(92,107,74,0.35); }
+    .sp-num-slate { background: #4a5568; box-shadow: 0 4px 14px rgba(74,85,104,0.35); }
+    .sp-flow-title { font-size: 14px; font-weight: 800; margin-bottom: 6px; }
+    .sp-flow-desc { font-size: 12px; color: var(--color-muted); line-height: 1.7; }
+    .sp-category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .sp-cat-card { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius); padding: 28px 20px; text-align: center; transition: all 0.2s; }
+    .sp-cat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .sp-cat-icon { font-size: 40px; margin-bottom: 12px; }
+    .sp-cat-name { font-size: 15px; font-weight: 800; margin-bottom: 6px; }
+    .sp-cat-desc { font-size: 12px; color: var(--color-muted); line-height: 1.7; }
+    .sp-scene-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    .sp-scene-card { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius); padding: 28px; display: flex; gap: 18px; align-items: flex-start; transition: all 0.2s; }
+    .sp-scene-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.08); }
+    .sp-scene-icon { font-size: 32px; flex-shrink: 0; }
+    .sp-scene-name { font-size: 15px; font-weight: 800; margin-bottom: 6px; }
+    .sp-scene-desc { font-size: 12px; color: var(--color-muted); line-height: 1.7; }
+    .sp-cta { padding: 80px 0; }
+    .sp-cta-green { background: linear-gradient(135deg, #3d5c34, #2a3f24); }
+    .sp-cta-earth { background: linear-gradient(135deg, #7a5c3a, #513d26); }
+    .sp-cta-slate { background: linear-gradient(135deg, #4a5568, #2d3748); }
+    .sp-cta-title { font-size: clamp(24px, 3.5vw, 36px); font-weight: 900; color: #fff; margin-bottom: 12px; }
+    .sp-cta-desc { font-size: 15px; color: rgba(255,255,255,0.7); margin-bottom: 32px; }
+
+    /* ===== レスポンシブ（タブレット以下） ===== */
+    @media (max-width: 1024px) {
+      .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .about-inner {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sp-detail-grid, .sp-reverse { grid-template-columns: 1fr; gap: 36px; direction: ltr; }
+      .sp-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .sp-flow-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+      .sp-flow-grid::before { display: none; }
+      .sp-category-grid { grid-template-columns: 1fr; }
+      .sp-scene-grid { grid-template-columns: 1fr; }
+
+      /* ヘッダーナビをハンバーガーに切り替え */
+      nav {
+        display: none;
+      }
+      .hamburger {
+        display: flex;
+      }
+
+      /* セクション余白を縮小 */
+      .section {
+        padding: 64px 0;
+      }
+
+      /* ヒーロー */
+      #hero {
+        padding: 80px 0 64px;
+      }
+
+      /* 統計グリッドを縦並びに */
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      /* サービスカードを1列に */
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+      .service-card:nth-child(3) {
+        grid-column: auto;
+      }
+
+      /* 実績を1列に */
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      /* お問い合わせを縦積みに */
+      .contact-inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      /* フッターを縦積みに */
+      .footer-inner {
+        flex-direction: column;
+        gap: 24px;
+      }
+      .footer-nav {
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+
+      /* チャットウィンドウをスマホ幅に合わせる */
+      .chat-window {
+        width: calc(100vw - 56px);
+        right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== ヘッダー ===== -->
+  <header>
+    <div class="container">
+      <div class="header-inner">
+        <a href="#hero" class="logo">まさ<span>flower</span></a>
+        <nav>
+          <a href="#about">会社概要</a>
+          <a href="#services">サービス</a>
+          <a href="#results">実績</a>
+          <a href="#contact" class="nav-cta">お問い合わせ</a>
+        </nav>
+        <button class="hamburger" id="hamburger" aria-label="メニューを開く">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <!-- モバイル用ナビゲーション -->
+    <div class="mobile-nav" id="mobileNav">
+      <a href="#about" class="mobile-nav-link">会社概要</a>
+      <a href="#services" class="mobile-nav-link">サービス</a>
+      <a href="#results" class="mobile-nav-link">実績</a>
+      <a href="#contact" class="mobile-nav-link">お問い合わせ</a>
+    </div>
+  </header>
+
+  <!-- ===== ヒーロー ===== -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <div class="hero-badge">🌸 生花卸・小売 ｜ 個人・法人対応</div>
+        <h1 class="hero-title">
+          花の力で、<br>
+          空間に<em>彩り</em>を。
+        </h1>
+        <p class="hero-desc">
+          まさflowerは、新鮮な生花を卸・小売でお届けする専門店です。<br>
+          個人のお客様から法人・イベントまで、幅広いご要望にお応えします。
+        </p>
+        <div class="hero-btns">
+          <a href="#services" class="btn btn-primary">サービスを見る</a>
+          <a href="#contact" class="btn btn-outline">お問い合わせ</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 実績数字 ===== -->
+  <section id="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number">500<span>種類以上</span></div>
+          <div class="stat-label">取扱品種数</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">300<span>社以上</span></div>
+          <div class="stat-label">取引先数</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">20<span>年以上</span></div>
+          <div class="stat-label">業界実績</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== サービス一覧 ===== -->
+  <section id="services" class="section">
+    <div class="container">
+      <div class="section-header center">
+        <div class="section-label">Services</div>
+        <h2 class="section-title">サービス一覧</h2>
+        <p class="section-desc">お客様のニーズに合わせた多様なサービスをご用意しています。</p>
+      </div>
+      <div class="services-grid">
+        <a href="#" class="service-card" data-icon="🌸" data-page="wholesale">
+          <div class="service-body">
+            <div class="service-name">生花卸売</div>
+            <p class="service-desc">花市場から直仕入れした新鮮な生花を、花屋・スーパー・ホテルなどの法人様へ大量卸しします。安定した品質と柔軟なロット対応が強みです。</p>
+            <span class="service-link">詳しく見る</span>
+          </div>
+        </a>
+        <a href="#" class="service-card" data-icon="🌷" data-page="retail">
+          <div class="service-body">
+            <div class="service-name">小売・店頭販売</div>
+            <p class="service-desc">季節の花・観葉植物・ブーケなどを店頭でご購入いただけます。手土産や贈り物、インテリアとしてお気軽にご利用ください。</p>
+            <span class="service-link">詳しく見る</span>
+          </div>
+        </a>
+        <a href="#" class="service-card" data-icon="🌼" data-page="event">
+          <div class="service-body">
+            <div class="service-name">イベント・法人対応</div>
+            <p class="service-desc">結婚式・式典・企業イベントへのフラワーアレンジメントや、オフィスへの定期配送など、法人様向けの特別プランもご用意しています。</p>
+            <span class="service-link">詳しく見る</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 会社概要 ===== -->
+  <section id="about" class="section">
+    <div class="container">
+      <div class="about-inner">
+        <div>
+          <div class="section-label">About Us</div>
+          <h2 class="section-title">会社概要</h2>
+          <p class="section-desc" style="margin-top:16px;">
+            地元の花文化を支え続けて20年以上。品質と誠実さを第一に、皆様の日常に花を届けています。
+          </p>
+        </div>
+        <table class="about-table">
+          <tr><th>会社名</th><td>まさflower（まさフラワー）</td></tr>
+          <tr><th>所在地</th><td>〒000-0000 東京都○○区○○1-2-3</td></tr>
+          <tr><th>代表者</th><td>代表　花田　正（はなだ まさ）</td></tr>
+          <tr><th>設立</th><td>2004年4月</td></tr>
+          <tr><th>営業時間</th><td>月〜土 9:00〜18:00（定休日：日曜・祝日）</td></tr>
+          <tr><th>事業内容</th><td>生花の卸売・小売、フラワーアレンジメント、法人向け定期配送</td></tr>
+          <tr><th>電話番号</th><td>03-XXXX-XXXX</td></tr>
+          <tr><th>メール</th><td>info@masa-flower.jp</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 実績 ===== -->
+  <section id="results" class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">Results</div>
+        <h2 class="section-title">納入実績</h2>
+        <p class="section-desc">さまざまな業種・規模のお客様にご利用いただいています。</p>
+      </div>
+      <div class="results-grid">
+        <div class="result-card">
+          <div class="result-icon">🏨</div>
+          <div>
+            <div class="result-title">都内高級ホテルへの定期納品</div>
+            <p class="result-desc">ロビーやレストランへの生花を毎週定期配送。季節感あふれるアレンジで空間を演出しています。</p>
+            <span class="result-tag">法人・ホテル</span>
+          </div>
+        </div>
+        <div class="result-card">
+          <div class="result-icon">💒</div>
+          <div>
+            <div class="result-title">ウェディングフラワー一式</div>
+            <p class="result-desc">ブライダルフェアおよび本番式典への装花をトータルコーディネート。年間50件以上の実績。</p>
+            <span class="result-tag">イベント・ウェディング</span>
+          </div>
+        </div>
+        <div class="result-card">
+          <div class="result-icon">🏢</div>
+          <div>
+            <div class="result-title">オフィスへの定期フラワー配送</div>
+            <p class="result-desc">受付や会議室への生花を週次で配送。社員のモチベーション向上・来客への印象アップに貢献。</p>
+            <span class="result-tag">法人・オフィス</span>
+          </div>
+        </div>
+        <div class="result-card">
+          <div class="result-icon">🌸</div>
+          <div>
+            <div class="result-title">地域イベントへの花材提供</div>
+            <p class="result-desc">地域の文化祭や商店街イベントへ花材を提供。地元コミュニティとの連携を大切にしています。</p>
+            <span class="result-tag">地域・イベント</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== お問い合わせ ===== -->
+  <section id="contact" class="section">
+    <div class="container">
+      <div class="contact-inner">
+        <div>
+          <div class="section-label">Contact</div>
+          <h2 class="section-title">お問い合わせ</h2>
+          <p class="contact-info p">
+            ご注文・ご相談・お見積もりなど、お気軽にお問い合わせください。<br>2営業日以内にご返信いたします。
+          </p>
+          <div class="contact-detail">
+            <div class="contact-detail-item">
+              <span class="icon">📞</span>03-XXXX-XXXX
+            </div>
+            <div class="contact-detail-item">
+              <span class="icon">🕐</span>月〜土 9:00〜18:00
+            </div>
+            <div class="contact-detail-item">
+              <span class="icon">✉️</span>info@masa-flower.jp
+            </div>
+          </div>
+        </div>
+        <form id="contactForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>お名前<span class="required">*</span></label>
+              <input type="text" name="name" placeholder="山田 太郎" required>
+            </div>
+            <div class="form-group">
+              <label>会社名</label>
+              <input type="text" name="company" placeholder="株式会社○○">
+            </div>
+            <div class="form-group">
+              <label>メールアドレス<span class="required">*</span></label>
+              <input type="email" name="email" placeholder="example@email.com" required>
+            </div>
+            <div class="form-group">
+              <label>電話番号</label>
+              <input type="tel" name="phone" placeholder="03-XXXX-XXXX">
+            </div>
+            <div class="form-group full">
+              <label>お問い合わせ内容<span class="required">*</span></label>
+              <textarea name="message" placeholder="ご注文・ご相談内容をご記入ください" required></textarea>
+            </div>
+            <div class="form-success" id="formSuccess">
+              ✅ 送信が完了しました。2営業日以内にご返信いたします。
+            </div>
+            <div class="form-submit">
+              <button type="submit" class="btn btn-primary">送信する →</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== フッター ===== -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div>
+          <div class="footer-logo">まさ<span>flower</span></div>
+          <div class="footer-tagline">花の力で、空間に彩りを。</div>
+        </div>
+        <nav class="footer-nav">
+          <a href="#about">会社概要</a>
+          <a href="#services">サービス</a>
+          <a href="#results">実績</a>
+          <a href="#contact">お問い合わせ</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        &copy; 2024 まさflower. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== サービス詳細オーバーレイ ===== -->
+  <div id="service-overlay">
+    <div id="service-overlay-inner">
+      <button id="service-close" aria-label="閉じる">✕</button>
+      <div id="service-content"></div>
+    </div>
+  </div>
+
+  <!-- ===== チャットボット ===== -->
+  <div class="chat-widget">
+    <div class="chat-window" id="chatWindow">
+      <div class="chat-header">
+        <div class="chat-header-title">🌸 まさflower チャット</div>
+        <div class="chat-header-sub">よくあるご質問にお答えします</div>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <!-- 初期メッセージはJSで挿入 -->
+      </div>
+      <div class="chat-footer">
+        <input class="chat-input" id="chatInput" type="text" placeholder="メッセージを入力..." autocomplete="off">
+        <button class="chat-send" id="chatSend">送信</button>
+      </div>
+    </div>
+    <button class="chat-btn" id="chatBtn" aria-label="チャットを開く">🌸</button>
+  </div>
+
+  <script>
+    /* ===== ハンバーガーメニュー ===== */
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileNav.classList.toggle('open');
+    });
+
+    /* モバイルナビのリンクをクリックしたらメニューを閉じる */
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        mobileNav.classList.remove('open');
+      });
+    });
+
+    /* ===== フォーム送信（ダミー） ===== */
+    document.getElementById('contactForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      document.getElementById('formSuccess').style.display = 'block';
+      e.target.reset();
+      /* スクロールして成功メッセージを表示 */
+      document.getElementById('formSuccess').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    /* ===== チャットボット ===== */
+    const chatBtn    = document.getElementById('chatBtn');
+    const chatWindow = document.getElementById('chatWindow');
+    const chatInput  = document.getElementById('chatInput');
+    const chatSend   = document.getElementById('chatSend');
+    const chatMessages = document.getElementById('chatMessages');
+
+    /* FAQデータ：キーワード配列と回答のペア */
+    const faqs = [
+      {
+        keywords: ['配送', '送料', 'エリア', '届け', '配達'],
+        answer: '配送エリアは東京都・神奈川県・埼玉県・千葉県を承っております。送料は距離・数量によって異なります。詳細はお問い合わせフォームよりご連絡ください。'
+      },
+      {
+        keywords: ['注文', '最小ロット', '数量', '最低', '何本', '何束'],
+        answer: '個人のお客様はご希望の数量から、法人・卸のお客様は最小ロット10束〜承っております。まずはお気軽にご相談ください。'
+      },
+      {
+        keywords: ['営業時間', '定休日', '時間', '営業', '休み', '何時'],
+        answer: '営業時間は月〜土曜日 9:00〜18:00です。日曜日・祝日は定休日となっております。'
+      }
+    ];
+
+    /* ボットメッセージを追加する関数 */
+    function addMessage(text, type) {
+      const msg = document.createElement('div');
+      msg.className = `chat-msg ${type}`;
+      msg.textContent = text;
+      chatMessages.appendChild(msg);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    /* ユーザー入力に対してFAQ回答を返す */
+    function getReply(input) {
+      const text = input.trim();
+      if (!text) return null;
+
+      /* キーワードマッチで回答を検索 */
+      for (const faq of faqs) {
+        if (faq.keywords.some(kw => text.includes(kw))) {
+          return faq.answer;
+        }
+      }
+
+      /* マッチしない場合はフォームへ誘導 */
+      return 'ご質問ありがとうございます。詳細なご相談は、ページ下部の「お問い合わせ」フォームよりお送りください。2営業日以内にご返信いたします。';
+    }
+
+    /* メッセージ送信処理 */
+    function sendMessage() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+
+      addMessage(text, 'user');
+      chatInput.value = '';
+
+      /* 少し遅延させてボットらしさを出す */
+      setTimeout(() => {
+        const reply = getReply(text);
+        addMessage(reply, 'bot');
+      }, 400);
+    }
+
+    chatSend.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+
+    /* チャットウィンドウの開閉 */
+    chatBtn.addEventListener('click', () => {
+      const isOpen = chatWindow.classList.toggle('open');
+
+      /* 初回オープン時に挨拶メッセージを追加 */
+      if (isOpen && chatMessages.children.length === 0) {
+        addMessage('こんにちは！まさflowerへようこそ🌸\n「配送エリア」「注文方法」「営業時間」などのご質問にお答えできます。', 'bot');
+      }
+    });
+
+    /* ===== サービス詳細ページ切り替え ===== */
+    /* カードクリックでオーバーレイを開く */
+    document.querySelectorAll('.service-card[data-page]').forEach(card => {
+      card.addEventListener('click', (e) => {
+        e.preventDefault();
+        const page = card.dataset.page;
+        openServicePage(page);
+      });
+    });
+
+    function openServicePage(page) {
+      const overlay = document.getElementById('service-overlay');
+      const content = document.getElementById('service-content');
+      content.innerHTML = servicePages[page] || '';
+      overlay.classList.add('open');
+      overlay.scrollTop = 0;
+      document.body.style.overflow = 'hidden';
+      /* FAQアコーディオンを再バインド */
+      content.querySelectorAll('.faq-q').forEach(q => {
+        q.addEventListener('click', () => q.closest('.faq-item').classList.toggle('open'));
+      });
+    }
+
+    function closeServicePage() {
+      document.getElementById('service-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('service-close').addEventListener('click', closeServicePage);
+    /* オーバーレイ背景クリックで閉じる */
+    document.getElementById('service-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeServicePage();
+    });
+    /* ESCキーで閉じる */
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeServicePage();
+    });
+    /* オーバーレイ内の「他のサービスへ」リンク */
+    document.getElementById('service-content').addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-goto]');
+      if (btn) {
+        e.preventDefault();
+        const page = btn.dataset.goto;
+        if (page === 'home') {
+          closeServicePage();
+        } else {
+          openServicePage(page);
+        }
+      }
+      /* お問い合わせリンク */
+      if (e.target.closest('[data-contact]')) {
+        e.preventDefault();
+        closeServicePage();
+        setTimeout(() => {
+          document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+        }, 300);
+      }
+    });
+
+    /* ===== 各サービスページのHTMLテンプレート ===== */
+    const servicePages = {
+
+      wholesale: `
+        <div class="sp-hero sp-green">
+          <div class="sp-hero-deco">🌸</div>
+          <div class="container">
+            <div class="sp-breadcrumb"><span data-goto="home" style="cursor:pointer">ホーム</span> / <span data-goto="home" style="cursor:pointer">サービス</span> / 生花卸売</div>
+            <h1 class="sp-title">生花卸売</h1>
+            <p class="sp-lead">花市場から直仕入れした新鮮な生花を、安定した品質・価格で法人様へお届けします。小ロットから大口まで柔軟に対応。</p>
+            <div class="sp-btns">
+              <a class="sp-btn-white" data-contact="1">無料見積もりを依頼</a>
+              <a class="sp-btn-outline" data-goto="home">他のサービスへ</a>
+            </div>
+          </div>
+        </div>
+        <div class="sp-kpi">
+          <div class="container"><div class="sp-kpi-grid">
+            <div class="sp-kpi-item"><div class="sp-kpi-num" style="color:var(--color-primary)">500<small>種+</small></div><div class="sp-kpi-label">取扱品種数</div></div>
+            <div class="sp-kpi-item"><div class="sp-kpi-num" style="color:var(--color-primary)">300<small>社+</small></div><div class="sp-kpi-label">取引法人数</div></div>
+            <div class="sp-kpi-item"><div class="sp-kpi-num" style="color:var(--color-primary)">翌日</div><div class="sp-kpi-label">最短お届け</div></div>
+            <div class="sp-kpi-item"><div class="sp-kpi-num" style="color:var(--color-primary)">20<small>年+</small></div><div class="sp-kpi-label">業界実績</div></div>
+          </div></div>
+        </div>
+        <div class="sp-body">
+          <div class="container">
+            <div class="sp-detail-grid">
+              <div class="sp-img sp-img-green">🌸</div>
+              <div>
+                <div class="sp-label">Service Detail</div>
+                <h2 class="sp-h2">花市場直仕入れで<br>新鮮さと品質を保証</h2>
+                <p class="sp-desc">毎朝花市場へ足を運び、鮮度・品質・価格のバランスが最良の生花を厳選して仕入れています。中間業者を挟まないため、コストを抑えながら高品質な花をお届けできます。</p>
+                <ul class="sp-checklist">
+                  <li>毎朝仕入れた当日便・翌日便に対応</li>
+                  <li>国産・輸入花を問わず500種以上の豊富な品揃え</li>
+                  <li>季節の旬の花を優先仕入れ、コストパフォーマンス抜群</li>
+                  <li>品質不良の場合は無償交換・返金対応</li>
+                </ul>
+              </div>
+            </div>
+            <div class="sp-detail-grid sp-reverse" style="margin-top:80px;">
+              <div class="sp-img sp-img-earth">🌷</div>
+              <div>
+                <div class="sp-label">Flexible Order</div>
+                <h2 class="sp-h2">小ロットから大口まで<br>柔軟に対応</h2>
+                <p class="sp-desc">花屋・ホテル・スーパー・葬儀社・ウェディング会社など、様々な業種・規模の法人様とお取引実績があります。初回のご注文でもご相談いただけます。</p>
+                <ul class="sp-checklist">
+                  <li>最小ロット10束〜（個人のお客様も応相談）</li>
+                  <li>定期配送・スポット注文どちらにも対応</li>
+                  <li>品種・数量のカスタムオーダー可能</li>
+                  <li>法人向け掛け払い・請求書払い対応</li>
+                </ul>
+              </div>
+            </div>
+            <div class="sp-flow-section">
+              <div class="sp-section-center"><div class="sp-label">Flow</div><h2 class="sp-h2">ご注文の流れ</h2></div>
+              <div class="sp-flow-grid">
+                <div class="sp-flow-item"><div class="sp-flow-num sp-num-green">1</div><div class="sp-flow-title">お問い合わせ</div><p class="sp-flow-desc">フォームまたはお電話でご希望の品種・数量・日程をお知らせください。</p></div>
+                <div class="sp-flow-item"><div class="sp-flow-num sp-num-green">2</div><div class="sp-flow-title">お見積もり</div><p class="sp-flow-desc">2営業日以内にお見積もりをご連絡。内容確認後、ご注文確定。</p></div>
+                <div class="sp-flow-item"><div class="sp-flow-num sp-num-green">3</div><div class="sp-flow-title">仕入れ・梱包</div><p class="sp-flow-desc">当日早朝に市場から仕入れ、鮮度を保ったまま丁寧に梱包します。</p></div>
+                <div class="sp-flow-item"><div class="sp-flow-num sp-num-green">4</div><div class="sp-flow-title">配送・お届け</div><p class="sp-flow-desc">ご指定の日時・場所へ配送。定期便の場合は継続してお届けします。</p></div>
+              </div>
+            </div>
+            <div class="sp-faq-section">
+              <div class="sp-section-center"><div class="sp-label">FAQ</div><h2 class="sp-h2" style="margin-bottom:40px;">よくある質問</h2></div>
+              <div class="faq-list">
+                <div class="faq-item"><div class="faq-q" style="--faq-color:var(--color-primary)">最小注文数量はどのくらいですか？</div><div class="faq-a">法人様向け卸売の場合、最小ロット10束〜承っております。品種や状況によって異なる場合がありますので、まずはお気軽にご相談ください。</div></div>
+                <div class="faq-item"><div class="faq-q">配送エリアはどこですか？</div><div class="faq-a">東京都・神奈川県・埼玉県・千葉県への配送に対応しております。</div></div>
+                <div class="faq-item"><div class="faq-q">急な追加注文には対応できますか？</div><div class="faq-a">在庫状況によっては当日・翌日対応も可能です。まずはお電話にてご連絡ください。</div></div>
+                <div class="faq-item"><div class="faq-q">品質に問題があった場合はどうなりますか？</div><div class="faq-a">品質上の問題があった場合、無償での交換または返金にて対応いたします。お届け後すみやかにご連絡ください。</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sp-cta sp-cta-green"><div class="container" style="text-align:center">
+          <h2 class="sp-cta-title">まずはお気軽にご相談ください</h2>
+          <p class="sp-cta-desc">見積もり無料。2営業日以内にご返信いたします。</p>
+          <div class="sp-btns" style="justify-content:center">
+            <a class="sp-btn-white" data-contact="1">無料見積もりを依頼 →</a>
+            <a class="sp-btn-outline" data-goto="home">トップへ戻る</a>
+          </div>
+        </div></div>`,
+
+      retail: `
+        <div class="sp-hero sp-earth">
+          <div class="sp-hero-deco">🌷</div>
+          <div class="container">
+            <div class="sp-breadcrumb"><span data-goto="home" style="cursor:pointer">ホーム</span> / <span data-goto="home" style="cursor:pointer">サービス</span> / 小売・店頭販売</div>
+            <h1 class="sp-title">小売・<br>店頭販売</h1>
+            <p class="sp-lead">季節の生花・ブーケ・観葉植物を店頭でご用意。贈り物から毎日のインテリアまで、あなたのライフスタイルに寄り添う花をお届けします。</p>
+            <div class="sp-btns">
+              <a class="sp-btn-white" data-contact="1">お問い合わせ</a>
+              <a class="sp-btn-outline" data-goto="home">他のサービスへ</a>
+            </div>
+          </div>
+        </div>
+        <div class="sp-kpi">
+          <div class="container"><div class="sp-kpi-grid">
+            <div class="sp-kpi-item"><div class="sp-kpi-num" style="color:var(--color-accent)">毎日</div><div class="sp-kpi-label">新鮮な仕入れ</div></div>
+            <div class="sp-kpi-item"><div class="sp-kpi-num" style="color:var(--color-accent)">200<small>種+</small></div><div class="sp-kpi-label">常時取扱品種</div></div>
+            <div class="sp-kpi-item"><div class="sp-kpi-num" style="color:var(--color-accent)">¥500<small>〜</small></div><div class="sp-kpi-label">一束からOK</div></div>
+            <div class="sp-kpi-item"><div class="sp-kpi-num" style="color:var(--color-accent)">当日</div><div class="sp-kpi-label">ラッピング対応</div></div>
+          </div></div>
+        </div>
+        <div class="sp-body">
+          <div class="container">
+            <div class="sp-detail-grid">
+              <div class="sp-img sp-img-earth">🌷</div>
+              <div>
+                <div class="sp-label">Fresh Flowers</div>
+                <h2 class="sp-h2">毎朝仕入れた<br>新鮮な花をそのまま</h2>
+                <p class="sp-desc">産地や市場から直接仕入れた生花を、その日のうちに店頭へ並べます。鮮度にこだわるから、長持ちする花をお届けできます。</p>
+                <ul class="sp-checklist sp-check-earth">
+                  <li>毎朝仕入れの新鮮な花を当日販売</li>
+                  <li>国産・輸入花を取り混ぜた豊富なラインナップ</li>
+                  <li>スタッフが最適な花のケア方法をご案内</li>
+                  <li>ギフト用ラッピング・メッセージカード無料</li>
+                </ul>
+              </div>
+            </div>
+            <div class="sp-category-section">
+              <div class="sp-section-center"><div class="sp-label">Category</div><h2 class="sp-h2">取扱商品カテゴリ</h2></div>
+              <div class="sp-category-grid">
+                <div class="sp-cat-card"><div class="sp-cat-icon">💐</div><div class="sp-cat-name">季節の切り花</div><p class="sp-cat-desc">バラ・チューリップ・ひまわりなど、季節ごとの旬の花を豊富にご用意。</p></div>
+                <div class="sp-cat-card"><div class="sp-cat-icon">🌿</div><div class="sp-cat-name">観葉植物</div><p class="sp-cat-desc">モンステラ・ポトス・サンスベリアなど、インテリアに馴染む植物を各種取り揃え。</p></div>
+                <div class="sp-cat-card"><div class="sp-cat-icon">🎀</div><div class="sp-cat-name">ブーケ・アレンジメント</div><p class="sp-cat-desc">プレゼントやお祝いに最適なブーケ。ご予算・シーンに合わせてオーダーも可能です。</p></div>
+                <div class="sp-cat-card"><div class="sp-cat-icon">🕯️</div><div class="sp-cat-name">お供え・仏花</div><p class="sp-cat-desc">仏壇用・お墓参り用のお供え花を、用途に合った品種・価格でご用意。</p></div>
+                <div class="sp-cat-card"><div class="sp-cat-icon">🌱</div><div class="sp-cat-name">多肉植物・サボテン</div><p class="sp-cat-desc">手間いらずで人気の多肉植物。プレゼントにも最適な小鉢サイズを多数取り揃え。</p></div>
+                <div class="sp-cat-card"><div class="sp-cat-icon">🎁</div><div class="sp-cat-name">ギフト・贈答</div><p class="sp-cat-desc">誕生日・記念日・お祝いなど、シーンに合わせたギフト提案。のし対応も承ります。</p></div>
+              </div>
+            </div>
+            <div class="sp-faq-section">
+              <div class="sp-section-center"><div class="sp-label">FAQ</div><h2 class="sp-h2" style="margin-bottom:40px;">よくある質問</h2></div>
+              <div class="faq-list">
+                <div class="faq-item"><div class="faq-q">営業時間と定休日を教えてください。</div><div class="faq-a">月〜土曜日 9:00〜18:00で営業しております。日曜日・祝日は定休日となります。</div></div>
+                <div class="faq-item"><div class="faq-q">一本から購入できますか？</div><div class="faq-a">はい、切り花は一本からお求めいただけます。まとめてお買い上げの場合はお得なセット販売もご用意しています。</div></div>
+                <div class="faq-item"><div class="faq-q">ラッピングはお願いできますか？</div><div class="faq-a">ギフト用ラッピングは無料で承っております。メッセージカードのご用意もできます。</div></div>
+                <div class="faq-item"><div class="faq-q">オーダーブーケの予約はどうすればいいですか？</div><div class="faq-a">お電話またはお問い合わせフォームにて、ご希望の日程・ご予算・イメージをお知らせください。3日前までのご連絡をお願いしております。</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sp-cta sp-cta-earth"><div class="container" style="text-align:center">
+          <h2 class="sp-cta-title">お気軽にご来店ください</h2>
+          <p class="sp-cta-desc">ご不明な点はお電話・お問い合わせフォームにてどうぞ。</p>
+          <div class="sp-btns" style="justify-content:center">
+            <a class="sp-btn-white" data-contact="1">お問い合わせ →</a>
+            <a class="sp-btn-outline" data-goto="home">トップへ戻る</a>
+          </div>
+        </div></div>`,
+
+      event: `
+        <div class="sp-hero sp-slate">
+          <div class="sp-hero-deco">🌼</div>
+          <div class="container">
+            <div class="sp-breadcrumb"><span data-goto="home" style="cursor:pointer">ホーム</span> / <span data-goto="home" style="cursor:pointer">サービス</span> / イベント・法人対応</div>
+            <h1 class="sp-title">イベント・<br>法人対応</h1>
+            <p class="sp-lead">結婚式・式典・企業イベントから、オフィスへの定期配送まで。法人様のあらゆるニーズに合わせたフラワーサービスをご提供します。</p>
+            <div class="sp-btns">
+              <a class="sp-btn-white" data-contact="1">法人向けお問い合わせ</a>
+              <a class="sp-btn-outline" data-goto="home">他のサービスへ</a>
+            </div>
+          </div>
+        </div>
+        <div class="sp-kpi">
+          <div class="container"><div class="sp-kpi-grid">
+            <div class="sp-kpi-item"><div class="sp-kpi-num" style="color:#4a5568">50<small>件+/年</small></div><div class="sp-kpi-label">年間イベント対応数</div></div>
+            <div class="sp-kpi-item"><div class="sp-kpi-num" style="color:#4a5568">100<small>社+</small></div><div class="sp-kpi-label">法人取引先</div></div>
+            <div class="sp-kpi-item"><div class="sp-kpi-num" style="color:#4a5568">最短</div><div class="sp-kpi-label">3日前から相談可</div></div>
+            <div class="sp-kpi-item"><div class="sp-kpi-num" style="color:#4a5568">全国</div><div class="sp-kpi-label">大型イベント対応</div></div>
+          </div></div>
+        </div>
+        <div class="sp-body">
+          <div class="container">
+            <div class="sp-detail-grid">
+              <div class="sp-img sp-img-slate">🌼</div>
+              <div>
+                <div class="sp-label">Event Flowers</div>
+                <h2 class="sp-h2">ハレの日を彩る<br>フラワー演出</h2>
+                <p class="sp-desc">結婚式・入学式・卒業式・式典など、特別な一日を美しい花で彩ります。会場規模・テーマ・ご予算に合わせてトータルコーディネートします。</p>
+                <ul class="sp-checklist sp-check-slate">
+                  <li>会場装飾から新郎新婦のブーケまで一括対応</li>
+                  <li>テーマカラー・会場雰囲気に合わせたデザイン提案</li>
+                  <li>前日搬入・当日設営・終了後の片付けまで</li>
+                  <li>大規模式典から家族だけの小さな式まで対応可</li>
+                </ul>
+              </div>
+            </div>
+            <div class="sp-scene-section">
+              <div class="sp-section-center"><div class="sp-label">Scenes</div><h2 class="sp-h2">対応シーン</h2></div>
+              <div class="sp-scene-grid">
+                <div class="sp-scene-card"><div class="sp-scene-icon">💒</div><div><div class="sp-scene-name">ウェディング</div><p class="sp-scene-desc">ブーケ・会場装飾・テーブルフラワーなど、結婚式に関わるフラワーを一括でご用意。</p></div></div>
+                <div class="sp-scene-card"><div class="sp-scene-icon">🏢</div><div><div class="sp-scene-name">オフィス定期配送</div><p class="sp-scene-desc">受付・エントランス・会議室への生花を定期配送。社内の雰囲気向上・来客への印象アップに。</p></div></div>
+                <div class="sp-scene-card"><div class="sp-scene-icon">🎊</div><div><div class="sp-scene-name">企業イベント・式典</div><p class="sp-scene-desc">周年式典・新商品発表・記念パーティーなど、企業の大切なイベントへのフラワー装飾を承ります。</p></div></div>
+                <div class="sp-scene-card"><div class="sp-scene-icon">🏨</div><div><div class="sp-scene-name">ホテル・レストラン</div><p class="sp-scene-desc">ロビー・客室・レストランへの定期配送。季節感あるアレンジメントで空間の価値を高めます。</p></div></div>
+              </div>
+            </div>
+            <div class="sp-flow-section">
+              <div class="sp-section-center"><div class="sp-label">Flow</div><h2 class="sp-h2">ご依頼の流れ</h2></div>
+              <div class="sp-flow-grid">
+                <div class="sp-flow-item"><div class="sp-flow-num sp-num-slate">1</div><div class="sp-flow-title">ご相談・ヒアリング</div><p class="sp-flow-desc">イベントの日時・会場・テーマ・ご予算をお聞かせください。</p></div>
+                <div class="sp-flow-item"><div class="sp-flow-num sp-num-slate">2</div><div class="sp-flow-title">プラン提案</div><p class="sp-flow-desc">ヒアリングをもとに、花の種類・アレンジ・お見積もりをご提案します。</p></div>
+                <div class="sp-flow-item"><div class="sp-flow-num sp-num-slate">3</div><div class="sp-flow-title">制作・準備</div><p class="sp-flow-desc">ご確認いただいたプランに基づき、花の仕入れ・制作を行います。</p></div>
+                <div class="sp-flow-item"><div class="sp-flow-num sp-num-slate">4</div><div class="sp-flow-title">搬入・設営</div><p class="sp-flow-desc">当日または前日に搬入・設営。終了後の片付けまで対応いたします。</p></div>
+              </div>
+            </div>
+            <div class="sp-faq-section">
+              <div class="sp-section-center"><div class="sp-label">FAQ</div><h2 class="sp-h2" style="margin-bottom:40px;">よくある質問</h2></div>
+              <div class="faq-list">
+                <div class="faq-item"><div class="faq-q">どのくらい前から相談できますか？</div><div class="faq-a">ウェディングは3ヶ月前〜、企業イベントは1ヶ月前〜のご相談を推奨しています。小規模なご依頼であれば3日前からでも対応可能な場合があります。</div></div>
+                <div class="faq-item"><div class="faq-q">見積もりは無料ですか？</div><div class="faq-a">はい、お見積もりは無料です。ご依頼内容・ご予算・ご要望をお聞きした上で最適なプランをご提案します。</div></div>
+                <div class="faq-item"><div class="faq-q">オフィス定期配送の最低契約期間はありますか？</div><div class="faq-a">最低3ヶ月からのご契約をお願いしております。継続いただく場合は割引プランもご用意しています。</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sp-cta sp-cta-slate"><div class="container" style="text-align:center">
+          <h2 class="sp-cta-title">法人・イベントのご相談は<br>お気軽にどうぞ</h2>
+          <p class="sp-cta-desc">見積もり無料。まずはご要望をお聞かせください。</p>
+          <div class="sp-btns" style="justify-content:center">
+            <a class="sp-btn-white" data-contact="1">無料相談・見積もり依頼 →</a>
+            <a class="sp-btn-outline" data-goto="home">トップへ戻る</a>
+          </div>
+        </div></div>`
+    };
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>イベント・法人対応 | まさflower</title>
+  <style>
+    :root {
+      --color-bg: #FAFAF8;
+      --color-surface: #FFFFFF;
+      --color-primary: #5C6B4A;
+      --color-primary-dark: #445039;
+      --color-accent: #A0845C;
+      --color-accent-light: #C4A882;
+      --color-text: #2D2D2D;
+      --color-muted: #7A7A72;
+      --color-border: #E8E6E0;
+      --radius: 12px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic',sans-serif; background: var(--color-bg); color: var(--color-text); line-height: 1.7; }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .logo { font-size: 22px; font-weight: 800; color: var(--color-primary); }
+    .logo span { color: var(--color-accent); }
+    nav { display: flex; align-items: center; gap: 32px; }
+    nav a { font-size: 14px; font-weight: 600; color: var(--color-muted); transition: color 0.2s; }
+    nav a:hover { color: var(--color-primary); }
+    .nav-cta { background: var(--color-primary); color: #fff !important; padding: 10px 20px; border-radius: 8px; font-weight: 700; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--color-text); border-radius: 2px; transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .mobile-nav { display: none; flex-direction: column; background: #fff; border-top: 1px solid var(--color-border); padding: 8px 0; }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a { padding: 14px 24px; font-size: 15px; font-weight: 600; color: var(--color-text); border-bottom: 1px solid var(--color-border); }
+    .mobile-nav a:last-child { border-bottom: none; }
+
+    /* ヒーロー（スレート系） */
+    .service-hero {
+      background: linear-gradient(145deg, #4a5568 0%, #2d3748 100%);
+      padding: 120px 0 100px; position: relative; overflow: hidden;
+    }
+    .service-hero::before {
+      content: '🌼';
+      position: absolute; top: 40px; right: 80px;
+      font-size: 220px; opacity: 0.12; line-height: 1; pointer-events: none;
+    }
+    .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: rgba(255,255,255,0.55); margin-bottom: 28px; }
+    .breadcrumb a { color: rgba(255,255,255,0.55); transition: color 0.2s; }
+    .breadcrumb a:hover { color: #fff; }
+    .breadcrumb span { color: rgba(255,255,255,0.35); }
+    .service-hero h1 { font-size: clamp(40px, 6vw, 68px); font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; color: #fff; margin-bottom: 20px; }
+    .service-hero p { font-size: 17px; color: rgba(255,255,255,0.7); max-width: 560px; line-height: 1.8; margin-bottom: 40px; }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: none; }
+    .btn-white { background: #fff; color: #2d3748; }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+    .btn-outline-white { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.4); }
+    .btn-outline-white:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+
+    .kpi-bar { background: #fff; border-bottom: 1px solid var(--color-border); }
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+    .kpi-item { padding: 36px 24px; text-align: center; border-right: 1px solid var(--color-border); }
+    .kpi-item:last-child { border-right: none; }
+    .kpi-number { font-size: 36px; font-weight: 900; color: #4a5568; letter-spacing: -0.03em; margin-bottom: 4px; }
+    .kpi-label { font-size: 13px; color: var(--color-muted); font-weight: 600; }
+
+    .section { padding: 96px 0; }
+    .section-label { font-size: 12px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 12px; }
+    .section-title { font-size: clamp(26px, 4vw, 38px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .section-desc { font-size: 15px; color: var(--color-muted); line-height: 1.8; max-width: 640px; }
+
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .detail-grid.reverse { direction: rtl; }
+    .detail-grid.reverse > * { direction: ltr; }
+    .detail-img { border-radius: 16px; aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; font-size: 120px; }
+    .detail-img.slate { background: linear-gradient(135deg, #e8edf5, #c8d4e8); }
+    .detail-img.green { background: linear-gradient(135deg, #e8f0e0, #c8dab8); }
+    .check-list { list-style: none; display: flex; flex-direction: column; gap: 14px; margin-top: 28px; }
+    .check-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; line-height: 1.6; }
+    .check-list li::before {
+      content: '✓'; display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: #4a5568; color: #fff;
+      font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+    }
+
+    /* 対応シーン */
+    .scene-bg { background: #F0EDE6; }
+    .scene-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .scene-card {
+      background: #fff; border: 1px solid var(--color-border);
+      border-radius: var(--radius); padding: 32px;
+      display: flex; gap: 20px; align-items: flex-start;
+      transition: all 0.2s;
+    }
+    .scene-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.08); border-color: #4a5568; }
+    .scene-icon { font-size: 36px; flex-shrink: 0; }
+    .scene-name { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
+    .scene-desc { font-size: 13px; color: var(--color-muted); line-height: 1.7; }
+
+    /* 対応フロー */
+    .flow-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      position: relative;
+    }
+    .flow-grid::before {
+      content: ''; position: absolute; top: 36px; left: 12.5%; right: 12.5%;
+      height: 2px; background: var(--color-border); z-index: 0;
+    }
+    .flow-item { text-align: center; padding: 0 16px; position: relative; z-index: 1; }
+    .flow-num {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: #4a5568; color: #fff;
+      font-size: 22px; font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 4px 16px rgba(74,85,104,0.3);
+    }
+    .flow-title { font-size: 15px; font-weight: 800; margin-bottom: 8px; }
+    .flow-desc { font-size: 13px; color: var(--color-muted); line-height: 1.7; }
+
+    /* 実績 */
+    .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .result-card {
+      background: #fff; border: 1px solid var(--color-border);
+      border-radius: var(--radius); padding: 28px 24px; text-align: center;
+      transition: all 0.2s;
+    }
+    .result-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .result-icon { font-size: 36px; margin-bottom: 12px; }
+    .result-name { font-size: 15px; font-weight: 800; margin-bottom: 6px; }
+    .result-count { font-size: 28px; font-weight: 900; color: #4a5568; margin-bottom: 4px; }
+    .result-label { font-size: 12px; color: var(--color-muted); }
+
+    .faq-list { display: flex; flex-direction: column; gap: 2px; }
+    .faq-item { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius); overflow: hidden; }
+    .faq-q { padding: 20px 24px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 16px; user-select: none; transition: background 0.2s; }
+    .faq-q:hover { background: #fafaf8; }
+    .faq-q::after { content: '+'; font-size: 20px; font-weight: 400; color: #4a5568; flex-shrink: 0; }
+    .faq-item.open .faq-q::after { content: '−'; }
+    .faq-a { display: none; padding: 16px 24px 20px; font-size: 14px; color: var(--color-muted); line-height: 1.8; border-top: 1px solid var(--color-border); }
+    .faq-item.open .faq-a { display: block; }
+
+    .cta-section { background: linear-gradient(135deg, #4a5568, #2d3748); padding: 96px 0; text-align: center; }
+    .cta-section h2 { font-size: clamp(28px, 4vw, 42px); font-weight: 900; color: #fff; margin-bottom: 16px; }
+    .cta-section p { font-size: 16px; color: rgba(255,255,255,0.7); margin-bottom: 40px; }
+    .cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    footer { background: var(--color-text); color: rgba(255,255,255,0.7); padding: 40px 0 28px; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 32px; flex-wrap: wrap; }
+    .footer-logo { font-size: 20px; font-weight: 800; color: #fff; }
+    .footer-logo span { color: var(--color-accent-light); }
+    .footer-nav { display: flex; gap: 24px; flex-wrap: wrap; }
+    .footer-nav a { font-size: 13px; color: rgba(255,255,255,0.6); transition: color 0.2s; }
+    .footer-nav a:hover { color: #fff; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 12px; color: rgba(255,255,255,0.35); text-align: center; }
+
+    @media (max-width: 768px) {
+      nav { display: none; }
+      .hamburger { display: flex; }
+      .detail-grid, .detail-grid.reverse { grid-template-columns: 1fr; gap: 40px; direction: ltr; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .scene-grid { grid-template-columns: 1fr; }
+      .results-grid { grid-template-columns: 1fr; }
+      .flow-grid { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+      .flow-grid::before { display: none; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <div class="header-inner">
+        <a href="masa-flower.html" class="logo">まさ<span>flower</span></a>
+        <nav>
+          <a href="masa-flower.html#about">会社概要</a>
+          <a href="masa-flower.html#services">サービス</a>
+          <a href="masa-flower.html#results">実績</a>
+          <a href="masa-flower.html#contact" class="nav-cta">お問い合わせ</a>
+        </nav>
+        <button class="hamburger" id="hamburger" aria-label="メニューを開く">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-nav" id="mobileNav">
+      <a href="masa-flower.html">ホーム</a>
+      <a href="masa-flower.html#about">会社概要</a>
+      <a href="masa-flower.html#services">サービス</a>
+      <a href="masa-flower.html#results">実績</a>
+      <a href="masa-flower.html#contact">お問い合わせ</a>
+    </div>
+  </header>
+
+  <section class="service-hero">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="masa-flower.html">ホーム</a>
+        <span>/</span>
+        <a href="masa-flower.html#services">サービス</a>
+        <span>/</span>
+        イベント・法人対応
+      </div>
+      <h1>イベント・<br>法人対応</h1>
+      <p>結婚式・式典・企業イベントから、オフィスへの定期配送まで。法人様のあらゆるニーズに合わせたフラワーサービスをご提供します。</p>
+      <div class="hero-btns">
+        <a href="masa-flower.html#contact" class="btn btn-white">法人向けお問い合わせ</a>
+        <a href="masa-flower.html#services" class="btn btn-outline-white">他のサービスを見る</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="kpi-bar">
+    <div class="container">
+      <div class="kpi-grid">
+        <div class="kpi-item">
+          <div class="kpi-number">50<small style="font-size:0.5em">件+/年</small></div>
+          <div class="kpi-label">年間イベント対応数</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-number">100<small style="font-size:0.5em">社+</small></div>
+          <div class="kpi-label">法人取引先</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-number">最短</div>
+          <div class="kpi-label">3日前から相談可</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-number">全国</div>
+          <div class="kpi-label">大型イベント対応</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="detail-grid">
+        <div class="detail-img slate">🌼</div>
+        <div>
+          <div class="section-label">Event Flowers</div>
+          <h2 class="section-title">ハレの日を彩る<br>フラワー演出</h2>
+          <p class="section-desc">結婚式・入学式・卒業式・式典など、特別な一日を美しい花で彩ります。会場規模・テーマ・ご予算に合わせてトータルコーディネートします。</p>
+          <ul class="check-list">
+            <li>会場装飾から新郎新婦のブーケまで一括対応</li>
+            <li>テーマカラー・会場雰囲気に合わせたデザイン提案</li>
+            <li>前日搬入・当日設営・終了後の片付けまで</li>
+            <li>大規模式典から家族だけの小さな式まで対応可</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 対応シーン -->
+  <section class="section scene-bg">
+    <div class="container">
+      <div style="text-align:center; margin-bottom:56px;">
+        <div class="section-label">Scenes</div>
+        <h2 class="section-title">対応シーン</h2>
+      </div>
+      <div class="scene-grid">
+        <div class="scene-card">
+          <div class="scene-icon">💒</div>
+          <div>
+            <div class="scene-name">ウェディング</div>
+            <p class="scene-desc">ブーケ・ブートニア・会場装飾・テーブルフラワーなど、結婚式に関わるフラワーを一括でご用意。打ち合わせから当日まで担当者が対応します。</p>
+          </div>
+        </div>
+        <div class="scene-card">
+          <div class="scene-icon">🏢</div>
+          <div>
+            <div class="scene-name">オフィス定期配送</div>
+            <p class="scene-desc">受付・エントランス・会議室への生花を週1〜月2回のペースで定期配送。社内の雰囲気向上・来客への印象アップに。</p>
+          </div>
+        </div>
+        <div class="scene-card">
+          <div class="scene-icon">🎊</div>
+          <div>
+            <div class="scene-name">企業イベント・式典</div>
+            <p class="scene-desc">周年式典・新商品発表・記念パーティーなど、企業の大切なイベントへのフラワー装飾を承ります。</p>
+          </div>
+        </div>
+        <div class="scene-card">
+          <div class="scene-icon">🏨</div>
+          <div>
+            <div class="scene-name">ホテル・レストラン</div>
+            <p class="scene-desc">ロビー・客室・レストランへの定期配送。季節感あるアレンジメントで空間の価値を高めます。</p>
+          </div>
+        </div>
+        <div class="scene-card">
+          <div class="scene-icon">🎓</div>
+          <div>
+            <div class="scene-name">学校行事・卒業式</div>
+            <p class="scene-desc">卒業式・入学式・文化祭など、学校行事への花の提供実績多数。生徒・保護者の記念になる装飾をご提案。</p>
+          </div>
+        </div>
+        <div class="scene-card">
+          <div class="scene-icon">🌸</div>
+          <div>
+            <div class="scene-name">その他・ご相談</div>
+            <p class="scene-desc">上記以外のシーンもお気軽にご相談ください。どのようなご要望にも対応できるよう最善を尽くします。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 対応フロー -->
+  <section class="section">
+    <div class="container">
+      <div style="text-align:center; margin-bottom:64px;">
+        <div class="section-label">Flow</div>
+        <h2 class="section-title">ご依頼の流れ</h2>
+      </div>
+      <div class="flow-grid">
+        <div class="flow-item">
+          <div class="flow-num">1</div>
+          <div class="flow-title">ご相談・ヒアリング</div>
+          <p class="flow-desc">イベントの日時・会場・テーマ・ご予算をお聞かせください。</p>
+        </div>
+        <div class="flow-item">
+          <div class="flow-num">2</div>
+          <div class="flow-title">プラン提案</div>
+          <p class="flow-desc">ヒアリングをもとに、花の種類・アレンジ・お見積もりをご提案します。</p>
+        </div>
+        <div class="flow-item">
+          <div class="flow-num">3</div>
+          <div class="flow-title">制作・準備</div>
+          <p class="flow-desc">ご確認いただいたプランに基づき、花の仕入れ・制作を行います。</p>
+        </div>
+        <div class="flow-item">
+          <div class="flow-num">4</div>
+          <div class="flow-title">搬入・設営</div>
+          <p class="flow-desc">当日または前日に搬入・設営。終了後の片付けまで対応いたします。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 実績数字 -->
+  <section class="section" style="background:#F0EDE6;">
+    <div class="container">
+      <div style="text-align:center; margin-bottom:56px;">
+        <div class="section-label">Results</div>
+        <h2 class="section-title">対応実績</h2>
+      </div>
+      <div class="results-grid">
+        <div class="result-card">
+          <div class="result-icon">💒</div>
+          <div class="result-name">ウェディング</div>
+          <div class="result-count">200+</div>
+          <div class="result-label">件の実績</div>
+        </div>
+        <div class="result-card">
+          <div class="result-icon">🏢</div>
+          <div class="result-name">オフィス定期配送</div>
+          <div class="result-count">50+</div>
+          <div class="result-label">社との契約</div>
+        </div>
+        <div class="result-card">
+          <div class="result-icon">🎊</div>
+          <div class="result-name">企業・式典イベント</div>
+          <div class="result-count">100+</div>
+          <div class="result-label">件の対応</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div style="max-width:720px; margin:0 auto;">
+        <div class="section-label" style="text-align:center;">FAQ</div>
+        <h2 class="section-title" style="text-align:center; margin-bottom:48px;">よくある質問</h2>
+        <div class="faq-list">
+          <div class="faq-item">
+            <div class="faq-q">どのくらい前から相談できますか？</div>
+            <div class="faq-a">規模にもよりますが、ウェディングは3ヶ月前〜、企業イベントは1ヶ月前〜のご相談を推奨しています。小規模なご依頼であれば3日前からでも対応可能な場合があります。</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">見積もりは無料ですか？</div>
+            <div class="faq-a">はい、お見積もりは無料です。ご依頼内容・ご予算・ご要望をお聞きした上で、最適なプランをご提案します。</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">オフィス定期配送の最低契約期間はありますか？</div>
+            <div class="faq-a">最低3ヶ月からのご契約をお願いしております。継続いただく場合は割引プランもご用意しています。</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">当日のキャンセルはどうなりますか？</div>
+            <div class="faq-a">キャンセルポリシーについてはご契約時にご説明いたします。花材の仕入れ後のキャンセルは費用が発生する場合がございます。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <h2>法人・イベントのご相談は<br>お気軽にどうぞ</h2>
+      <p>見積もり無料。まずはご要望をお聞かせください。</p>
+      <div class="cta-btns">
+        <a href="masa-flower.html#contact" class="btn btn-white">無料相談・見積もり依頼 →</a>
+        <a href="masa-flower.html#services" class="btn btn-outline-white">他のサービスを見る</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">まさ<span>flower</span></div>
+        <nav class="footer-nav">
+          <a href="masa-flower.html#about">会社概要</a>
+          <a href="masa-flower.html#services">サービス</a>
+          <a href="masa-flower.html#results">実績</a>
+          <a href="masa-flower.html#contact">お問い合わせ</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">&copy; 2024 まさflower. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.faq-q').forEach(q => {
+      q.addEventListener('click', () => q.closest('.faq-item').classList.toggle('open'));
+    });
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileNav.classList.toggle('open');
+    });
+    mobileNav.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        mobileNav.classList.remove('open');
+      });
+    });
+  </script>
+</body>
+</html>

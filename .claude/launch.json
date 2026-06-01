@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "masa-flower",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["/tmp/masa_server.py"],
+      "port": 3334
+    }
+  ]
+}
