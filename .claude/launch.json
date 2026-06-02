@@ -4,7 +4,7 @@
     {
       "name": "masa-flower",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["/tmp/masa_server.py"],
+      "runtimeArgs": ["/Users/morinagadaiji/Desktop/テスト/server.py"],
       "port": 3334
     }
   ]

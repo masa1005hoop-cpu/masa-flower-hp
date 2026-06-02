@@ -733,8 +733,21 @@
       font-size: 14px;
       transition: background 0.2s;
     }
-    .chat-send:hover {
-      background: var(--color-primary-dark);
+    .chat-send:hover { background: var(--color-primary-dark); }
+    .chat-send:disabled, .chat-input:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* ローディング（3点アニメーション） */
+    .chat-loading { display: flex; align-items: center; gap: 4px; padding: 12px 16px; }
+    .chat-loading span {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--color-muted);
+      animation: chatDot 1.2s ease-in-out infinite;
+    }
+    .chat-loading span:nth-child(2) { animation-delay: 0.2s; }
+    .chat-loading span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes chatDot {
+      0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
+      40% { transform: scale(1); opacity: 1; }
     }
 
     /* ===== サービス詳細オーバーレイ ===== */
@@ -1219,82 +1232,98 @@
       document.getElementById('formSuccess').scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
 
-    /* ===== チャットボット ===== */
-    const chatBtn    = document.getElementById('chatBtn');
-    const chatWindow = document.getElementById('chatWindow');
-    const chatInput  = document.getElementById('chatInput');
-    const chatSend   = document.getElementById('chatSend');
+    /* ===== AI チャットボット（Claude API） ===== */
+    const chatBtn     = document.getElementById('chatBtn');
+    const chatWindow  = document.getElementById('chatWindow');
+    const chatInput   = document.getElementById('chatInput');
+    const chatSend    = document.getElementById('chatSend');
     const chatMessages = document.getElementById('chatMessages');
 
-    /* FAQデータ：キーワード配列と回答のペア */
-    const faqs = [
-      {
-        keywords: ['配送', '送料', 'エリア', '届け', '配達'],
-        answer: '配送エリアは東京都・神奈川県・埼玉県・千葉県を承っております。送料は距離・数量によって異なります。詳細はお問い合わせフォームよりご連絡ください。'
-      },
-      {
-        keywords: ['注文', '最小ロット', '数量', '最低', '何本', '何束'],
-        answer: '個人のお客様はご希望の数量から、法人・卸のお客様は最小ロット10束〜承っております。まずはお気軽にご相談ください。'
-      },
-      {
-        keywords: ['営業時間', '定休日', '時間', '営業', '休み', '何時'],
-        answer: '営業時間は月〜土曜日 9:00〜18:00です。日曜日・祝日は定休日となっております。'
-      }
-    ];
+    /* 会話履歴（Claude API に渡す messages 配列） */
+    let conversationHistory = [];
+    let isSending = false;
 
-    /* ボットメッセージを追加する関数 */
+    /* メッセージを画面に追加する */
     function addMessage(text, type) {
       const msg = document.createElement('div');
       msg.className = `chat-msg ${type}`;
       msg.textContent = text;
       chatMessages.appendChild(msg);
       chatMessages.scrollTop = chatMessages.scrollHeight;
+      return msg;
     }
 
-    /* ユーザー入力に対してFAQ回答を返す */
-    function getReply(input) {
-      const text = input.trim();
-      if (!text) return null;
-
-      /* キーワードマッチで回答を検索 */
-      for (const faq of faqs) {
-        if (faq.keywords.some(kw => text.includes(kw))) {
-          return faq.answer;
-        }
-      }
-
-      /* マッチしない場合はフォームへ誘導 */
-      return 'ご質問ありがとうございます。詳細なご相談は、ページ下部の「お問い合わせ」フォームよりお送りください。2営業日以内にご返信いたします。';
+    /* ローディング表示（点滅する3点） */
+    function addLoading() {
+      const msg = document.createElement('div');
+      msg.className = 'chat-msg bot chat-loading';
+      msg.innerHTML = '<span></span><span></span><span></span>';
+      chatMessages.appendChild(msg);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      return msg;
     }
 
-    /* メッセージ送信処理 */
-    function sendMessage() {
+    /* Claude API にリクエストを送る */
+    async function sendMessage() {
       const text = chatInput.value.trim();
-      if (!text) return;
+      if (!text || isSending) return;
+
+      isSending = true;
+      chatInput.disabled = true;
+      chatSend.disabled  = true;
 
       addMessage(text, 'user');
       chatInput.value = '';
 
-      /* 少し遅延させてボットらしさを出す */
-      setTimeout(() => {
-        const reply = getReply(text);
-        addMessage(reply, 'bot');
-      }, 400);
+      /* 会話履歴に追加 */
+      conversationHistory.push({ role: 'user', content: text });
+
+      const loading = addLoading();
+
+      try {
+        /* file:// で開いた場合もサーバーに届くよう絶対URLを使う */
+        const apiBase = location.protocol === 'file:' ? 'http://localhost:3334' : '';
+        const res = await fetch(apiBase + '/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: conversationHistory }),
+        });
+
+        const data = await res.json();
+        loading.remove();
+
+        if (data.reply) {
+          addMessage(data.reply, 'bot');
+          conversationHistory.push({ role: 'assistant', content: data.reply });
+        } else {
+          addMessage(data.error || 'エラーが発生しました。しばらくしてからお試しください。', 'bot');
+          /* エラー時は最後のユーザー発言を履歴から削除 */
+          conversationHistory.pop();
+        }
+      } catch {
+        loading.remove();
+        addMessage('通信エラーが発生しました。ページを再読み込みしてお試しください。', 'bot');
+        conversationHistory.pop();
+      } finally {
+        isSending = false;
+        chatInput.disabled = false;
+        chatSend.disabled  = false;
+        chatInput.focus();
+      }
     }
 
     chatSend.addEventListener('click', sendMessage);
     chatInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') sendMessage();
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
     });
 
     /* チャットウィンドウの開閉 */
     chatBtn.addEventListener('click', () => {
       const isOpen = chatWindow.classList.toggle('open');
-
-      /* 初回オープン時に挨拶メッセージを追加 */
       if (isOpen && chatMessages.children.length === 0) {
-        addMessage('こんにちは！まさflowerへようこそ🌸\n「配送エリア」「注文方法」「営業時間」などのご質問にお答えできます。', 'bot');
+        addMessage('こんにちは！まさflowerのAIアシスタントです🌸\nサービス・配送・ご注文など、どんなことでもお気軽にご質問ください。', 'bot');
       }
+      if (isOpen) chatInput.focus();
     });
 
     /* ===== サービス詳細ページ切り替え ===== */
