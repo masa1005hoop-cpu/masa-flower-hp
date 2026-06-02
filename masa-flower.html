@@ -1283,26 +1283,41 @@
       try {
         /* file:// で開いた場合もサーバーに届くよう絶対URLを使う */
         const apiBase = location.protocol === 'file:' ? 'http://localhost:3334' : '';
-        const res = await fetch(apiBase + '/api/chat', {
+        const endpoint = apiBase + '/api/chat';
+        console.log('[Chat] POST', endpoint, { messageCount: conversationHistory.length });
+
+        const res = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ messages: conversationHistory }),
         });
 
-        const data = await res.json();
+        console.log('[Chat] Response status:', res.status, res.statusText);
+
+        let data;
+        try {
+          data = await res.json();
+          console.log('[Chat] Response data:', data);
+        } catch (jsonErr) {
+          console.error('[Chat] Failed to parse JSON response:', jsonErr);
+          throw new Error(`サーバーから不正なレスポンス (HTTP ${res.status})`);
+        }
+
         loading.remove();
 
         if (data.reply) {
           addMessage(data.reply, 'bot');
           conversationHistory.push({ role: 'assistant', content: data.reply });
         } else {
-          addMessage(data.error || 'エラーが発生しました。しばらくしてからお試しください。', 'bot');
-          /* エラー時は最後のユーザー発言を履歴から削除 */
+          const errMsg = data.error || `エラーが発生しました (HTTP ${res.status})`;
+          console.error('[Chat] API error:', errMsg);
+          addMessage(errMsg, 'bot');
           conversationHistory.pop();
         }
-      } catch {
+      } catch (err) {
         loading.remove();
-        addMessage('通信エラーが発生しました。ページを再読み込みしてお試しください。', 'bot');
+        console.error('[Chat] Network/unexpected error:', err);
+        addMessage(`通信エラー: ${err.message || 'ページを再読み込みしてお試しください。'}`, 'bot');
         conversationHistory.pop();
       } finally {
         isSending = false;
