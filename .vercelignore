@@ -1,0 +1,7 @@
+# 内部資料・開発用ファイルはデプロイに含めない
+営業キット
+.claude
+CLAUDE.md
+server.py
+.env
+.env.example

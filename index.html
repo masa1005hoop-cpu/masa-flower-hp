@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>まさflower | 生花卸・小売</title>
+  <title>そらflower | 生花卸・小売（制作デモサイト）</title>
   <style>
     /* ===== CSS変数（カラーパレット） ===== */
     :root {
@@ -936,7 +936,7 @@
   <header>
     <div class="container">
       <div class="header-inner">
-        <a href="#hero" class="logo">まさ<span>flower</span></a>
+        <a href="#hero" class="logo">そら<span>flower</span></a>
         <nav>
           <a href="#about">会社概要</a>
           <a href="#services">サービス</a>
@@ -967,7 +967,7 @@
           空間に<em>彩り</em>を。
         </h1>
         <p class="hero-desc">
-          まさflowerは、新鮮な生花を卸・小売でお届けする専門店です。<br>
+          そらflowerは、新鮮な生花を卸・小売でお届けする専門店です。<br>
           個人のお客様から法人・イベントまで、幅広いご要望にお応えします。
         </p>
         <div class="hero-btns">
@@ -1044,14 +1044,14 @@
           </p>
         </div>
         <table class="about-table">
-          <tr><th>会社名</th><td>まさflower（まさフラワー）</td></tr>
+          <tr><th>会社名</th><td>そらflower（そらフラワー）</td></tr>
           <tr><th>所在地</th><td>〒000-0000 東京都○○区○○1-2-3</td></tr>
           <tr><th>代表者</th><td>代表　花田　正（はなだ まさ）</td></tr>
           <tr><th>設立</th><td>2004年4月</td></tr>
           <tr><th>営業時間</th><td>月〜土 9:00〜18:00（定休日：日曜・祝日）</td></tr>
           <tr><th>事業内容</th><td>生花の卸売・小売、フラワーアレンジメント、法人向け定期配送</td></tr>
           <tr><th>電話番号</th><td>03-XXXX-XXXX</td></tr>
-          <tr><th>メール</th><td>info@masa-flower.jp</td></tr>
+          <tr><th>メール</th><td>info@example.jp</td></tr>
         </table>
       </div>
     </div>
@@ -1120,7 +1120,7 @@
               <span class="icon">🕐</span>月〜土 9:00〜18:00
             </div>
             <div class="contact-detail-item">
-              <span class="icon">✉️</span>info@masa-flower.jp
+              <span class="icon">✉️</span>info@example.jp
             </div>
           </div>
         </div>
@@ -1163,7 +1163,7 @@
     <div class="container">
       <div class="footer-inner">
         <div>
-          <div class="footer-logo">まさ<span>flower</span></div>
+          <div class="footer-logo">そら<span>flower</span></div>
           <div class="footer-tagline">花の力で、空間に彩りを。</div>
         </div>
         <nav class="footer-nav">
@@ -1174,7 +1174,8 @@
         </nav>
       </div>
       <div class="footer-bottom">
-        &copy; 2024 まさflower. All rights reserved.
+        <p style="margin-bottom: 8px; opacity: 0.7; font-size: 0.85em;">本サイトは架空の店舗を題材にした制作サンプル（デモ）です。実在の店舗・連絡先ではありません。</p>
+        &copy; 2024 そらflower. All rights reserved.
       </div>
     </div>
   </footer>
@@ -1191,7 +1192,7 @@
   <div class="chat-widget">
     <div class="chat-window" id="chatWindow">
       <div class="chat-header">
-        <div class="chat-header-title">🌸 まさflower チャット</div>
+        <div class="chat-header-title">🌸 そらflower チャット</div>
         <div class="chat-header-sub">よくあるご質問にお答えします</div>
       </div>
       <div class="chat-messages" id="chatMessages">
@@ -1336,7 +1337,7 @@
     chatBtn.addEventListener('click', () => {
       const isOpen = chatWindow.classList.toggle('open');
       if (isOpen && chatMessages.children.length === 0) {
-        addMessage('こんにちは！まさflowerのAIアシスタントです🌸\nサービス・配送・ご注文など、どんなことでもお気軽にご質問ください。', 'bot');
+        addMessage('こんにちは！そらflowerのAIアシスタントです🌸\nサービス・配送・ご注文など、どんなことでもお気軽にご質問ください。', 'bot');
       }
       if (isOpen) chatInput.focus();
     });

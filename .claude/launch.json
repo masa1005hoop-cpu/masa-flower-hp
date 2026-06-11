@@ -2,7 +2,7 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "masa-flower",
+      "name": "sora-flower-demo",
       "runtimeExecutable": "python3",
       "runtimeArgs": ["/Users/morinagadaiji/Desktop/テスト/server.py"],
       "port": 3334
