@@ -5,7 +5,8 @@
       "name": "sora-flower-demo",
       "runtimeExecutable": "python3",
       "runtimeArgs": ["/Users/morinagadaiji/Desktop/テスト/server.py"],
-      "port": 3334
+      "port": 3334,
+      "autoPort": true
     }
   ]
 }

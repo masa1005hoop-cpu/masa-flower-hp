@@ -21,7 +21,8 @@ if os.path.exists(_env_path):
                 os.environ.setdefault(k.strip(), v.strip())
 
 # ===== 設定 =====
-PORT = 3334
+# PORT 環境変数があればそれを使う（プレビュー起動時の自動割り当てに対応）
+PORT = int(os.environ.get('PORT', 3334))
 DIR  = os.path.dirname(os.path.abspath(__file__))
 
 # そらflower のシステムプロンプト
